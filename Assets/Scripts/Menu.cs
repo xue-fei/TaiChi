@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
@@ -9,7 +11,7 @@ public class Menu : MonoBehaviour
     public UToggle toggleStory;
 
     public USlider uSlider;
-    public Camera uCamera;
+    public Image background;
 
     // Start is called before the first frame update
     void Start()
@@ -22,16 +24,16 @@ public class Menu : MonoBehaviour
         toggleStory = toggles.Find("ToggleStory").GetComponent<UToggle>();
 
         toggleHome.isOn = true;
-
-        uCamera = Camera.main;
+        background = transform.Find("Background").GetComponent<Image>();
         uSlider = transform.Find("Slider").GetComponent<USlider>();
+        uSlider.value = 1f;
         uSlider.onClick += OnClickSlider;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void OnClickSlider()
@@ -44,11 +46,11 @@ public class Menu : MonoBehaviour
 
         if (Data.uStyle == UStyle.Black)
         {
-            uCamera.backgroundColor = Color.black;
+            background.DOColor(Color.black, 0.5f);
         }
         if (Data.uStyle == UStyle.White)
         {
-            uCamera.backgroundColor = Color.white;
+            background.DOColor(Color.white, 0.5f);
         }
     }
 }

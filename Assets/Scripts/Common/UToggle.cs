@@ -2,11 +2,13 @@ using TMPro;
 using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class UToggle : Toggle
 {
     public SVGImage background;
     public SVGImage checkmark;
+    public SVGImage svgImage;
     public TextMeshProUGUI text;
 
 
@@ -15,6 +17,9 @@ public class UToggle : Toggle
         background = transform.Find("Background").GetComponent<SVGImage>();
         checkmark = background.transform.Find("Checkmark").GetComponent<SVGImage>();
         text = background.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
+        svgImage = transform.Find("SVG Image").GetComponent<SVGImage>();
+        svgImage.color = Data.checkedColor;
+        svgImage.gameObject.SetActive(false);
 
         background.color = Color.white;
         checkmark.color = Color.white;
@@ -30,21 +35,36 @@ public class UToggle : Toggle
             background.color = Data.checkedColor;
             checkmark.color = Data.checkedColor;
             text.color = Data.checkedColor;
+            svgImage.gameObject.SetActive(true);
         }
         else
         {
-            if (Data.uStyle == UStyle.White)
-            {
-                background.color = Color.black;
-                checkmark.color = Color.black;
-                text.color = Color.black;
-            }
-            if (Data.uStyle == UStyle.Black)
-            {
-                background.color = Color.white;
-                checkmark.color = Color.white;
-                text.color = Color.white;
-            }
+            ChangeColor();
+            svgImage.gameObject.SetActive(false);
+        }
+    }
+
+    private void ChangeColor()
+    {
+        if (Data.uStyle == UStyle.White)
+        {
+            background.DOColor(Color.black, 0.5f);
+            checkmark.DOColor(Color.black, 0.5f);
+            text.DOColor(Color.black, 0.5f);
+
+            //background.color = Color.black;
+            //checkmark.color = Color.black;
+            //text.color = Color.black;
+        }
+        if (Data.uStyle == UStyle.Black)
+        {
+            background.DOColor(Color.white, 0.5f);
+            checkmark.DOColor(Color.white, 0.5f);
+            text.DOColor(Color.white, 0.5f);
+
+            //background.color = Color.white;
+            //checkmark.color = Color.white;
+            //text.color = Color.white;
         }
     }
 
@@ -56,18 +76,7 @@ public class UToggle : Toggle
         }
         else
         {
-            if (Data.uStyle == UStyle.White)
-            {
-                background.color = Color.black;
-                checkmark.color = Color.black;
-                text.color = Color.black;
-            }
-            if (Data.uStyle == UStyle.Black)
-            {
-                background.color = Color.white;
-                checkmark.color = Color.white;
-                text.color = Color.white;
-            }
+            ChangeColor();
         }
     }
 }

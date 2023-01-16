@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class USlider : Slider
 {
@@ -26,20 +27,20 @@ public class USlider : Slider
         Debug.LogWarning("嘿嘿嘿");
         if (Data.uStyle == UStyle.White)
         {
-            value = 1f;
-            text.color = Color.white;
-            Data.uStyle = UStyle.Black;
+            this.DOValue(1f, 0.5f); 
             text.text = "黑暗";
+            text.DOColor(Color.white, 0.5f); 
+            Data.uStyle = UStyle.Black;
             onClick?.Invoke();
             Debug.LogWarning("黑暗");
             return;
         }
         else
         {
-            value = 0f;
-            text.color = Color.black;
-            Data.uStyle = UStyle.White;
+            this.DOValue(0f, 0.5f);
             text.text = "光明";
+            text.DOColor(Color.black, 0.5f);
+            Data.uStyle = UStyle.White; 
             Debug.LogWarning("光明");
             onClick?.Invoke();
         }
