@@ -35,15 +35,15 @@ public class UToggle : Toggle
         {
             if (Data.uStyle == UStyle.White)
             {
-                background.color = Color.white;
-                checkmark.color = Color.white;
-                text.color = Color.white;
-            }
-            if (Data.uStyle == UStyle.Black)
-            {
                 background.color = Color.black;
                 checkmark.color = Color.black;
                 text.color = Color.black;
+            }
+            if (Data.uStyle == UStyle.Black)
+            {
+                background.color = Color.white;
+                checkmark.color = Color.white;
+                text.color = Color.white;
             }
         }
     }
