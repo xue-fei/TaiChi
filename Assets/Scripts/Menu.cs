@@ -13,6 +13,12 @@ public class Menu : MonoBehaviour
     public USlider uSlider;
     public Image background;
 
+    public GameObject panelHome;
+    public GameObject panelPicture;
+    public GameObject panelMusic;
+    public GameObject panelVideo;
+    public GameObject panelStory;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,10 +30,24 @@ public class Menu : MonoBehaviour
         toggleStory = toggles.Find("ToggleStory").GetComponent<UToggle>();
 
         toggleHome.isOn = true;
-        background = transform.Find("Background").GetComponent<Image>();
+        toggleHome.onValueChanged.AddListener((value) => OnToggle(value, toggleHome));
+        togglePicture.onValueChanged.AddListener((value) => OnToggle(value, togglePicture));
+        toggleMusic.onValueChanged.AddListener((value) => OnToggle(value, toggleMusic));
+        toggleVideo.onValueChanged.AddListener((value) => OnToggle(value, toggleVideo));
+        toggleStory.onValueChanged.AddListener((value) => OnToggle(value, toggleStory));
+
+
+
+        background = transform.parent.Find("Background").GetComponent<Image>();
         uSlider = transform.Find("Slider").GetComponent<USlider>();
         uSlider.value = 1f;
         uSlider.onClick += OnClickSlider;
+
+        panelHome = transform.parent.Find("PanelHome").gameObject;
+        panelPicture = transform.parent.Find("PanelPicture").gameObject;
+        panelMusic = transform.parent.Find("PanelMusic").gameObject;
+        panelVideo = transform.parent.Find("PanelVideo").gameObject;
+        panelStory = transform.parent.Find("PanelStory").gameObject;
     }
 
     // Update is called once per frame
@@ -51,6 +71,38 @@ public class Menu : MonoBehaviour
         if (Data.uStyle == UStyle.White)
         {
             background.DOColor(Color.white, 0.5f);
+        }
+    }
+
+    void OnToggle(bool value, UToggle uToggle)
+    {
+        if(value)
+        {
+            panelHome.SetActive(false);
+            panelPicture.SetActive(false);
+            panelMusic.SetActive(false);
+            panelVideo.SetActive(false);
+            panelStory.SetActive(false);
+            if(uToggle.name == toggleHome.name)
+            {
+                panelHome.SetActive(true);
+            }
+            if (uToggle.name == togglePicture.name)
+            {
+                panelPicture.SetActive(true);
+            }
+            if (uToggle.name == toggleMusic.name)
+            {
+                panelMusic.SetActive(true);
+            }
+            if (uToggle.name == toggleVideo.name)
+            {
+                panelVideo.SetActive(true);
+            }
+            if (uToggle.name == toggleStory.name)
+            {
+                panelStory.SetActive(true);
+            }
         }
     }
 }
