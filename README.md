@@ -1,23 +1,21 @@
-# USO
+# TaiChi
 
-#### 介绍
-Unity Slack Off Unity摸鱼软件
-
-#### 软件架构
-软件架构说明
+#### 名称
+太·极 Unity摸鱼软件 
 
 
-#### 安装教程
+#### 说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  创意源自 https://github.com/cuifengcn/TAICHI-flet
+2.  当前Unity版本 Unity 2021.3.12f1c2
+3.  API来自 https://api.aa1.cn/
+4.  图标来自 https://iconpark.oceanengine.com/official
+5.  功能未完成
 
-#### 使用说明
+#### 效果图
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+
+
 
 #### 参与贡献
 
