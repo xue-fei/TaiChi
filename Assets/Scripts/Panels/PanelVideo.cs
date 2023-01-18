@@ -1,24 +1,31 @@
 ﻿using RenderHeads.Media.AVProVideo;
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class PanelVideo : MonoBehaviour
 {
     public MediaPlayer mediaPlayer;
-
+    public TMP_Dropdown dropdown;
     VideoType videoType = VideoType.Beauty;
     string sceneryUrl = "https://v.api.aa1.cn/api/api-fj/index.php?aa1=suf7y58th48u935";
     string beautyUrl = "https://tucdn.wpon.cn/api-girl/index.php?wpon=json";
-    string url = "";
+
+    private void Awake()
+    {
+        mediaPlayer = transform.Find("AVPro Media Player").GetComponent<MediaPlayer>();
+        dropdown = transform.Find("Dropdown").GetComponent<TMP_Dropdown>();
+        dropdown.onValueChanged.AddListener(OnSelect);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         PlayVideo();
     }
-      
+
     public void OnVideoEvent(MediaPlayer mp, MediaPlayerEvent.EventType et, ErrorCode er)
     {
         switch (et)
@@ -32,10 +39,10 @@ public class PanelVideo : MonoBehaviour
             default:
                 break;
         }
-        if(er!= ErrorCode.None)
+        if (er != ErrorCode.None)
         {
             PlayVideo();
-        } 
+        }
     }
 
     private void PlayVideo()
@@ -49,7 +56,7 @@ public class PanelVideo : MonoBehaviour
             StartCoroutine(RequestVideoUrl());
         }
     }
-     
+
     private IEnumerator RequestVideoUrl()
     {
         UnityWebRequest uwr = UnityWebRequest.Get(beautyUrl);
@@ -70,9 +77,26 @@ public class PanelVideo : MonoBehaviour
             {
                 Debug.LogError(e);
                 yield break;
-            } 
+            }
             mediaPlayer.OpenVideoFromFile(MediaPlayer.FileLocation.AbsolutePathOrURL, "https:" + data.mp4, true);
         }
+    }
+
+    private void OnSelect(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                videoType = VideoType.Beauty;
+                break;
+            case 1:
+                videoType = VideoType.Scenery;
+                break;
+            default:
+                videoType = VideoType.Scenery;
+                break;
+        }
+        PlayVideo();
     }
 
     enum VideoType

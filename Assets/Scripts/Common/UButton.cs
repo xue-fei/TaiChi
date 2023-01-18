@@ -1,18 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
+using Unity.VectorGraphics;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class UButton : MonoBehaviour
+public class UButton : Button, IChangeStyle
 {
-    // Start is called before the first frame update
-    void Start()
+    public SVGImage svgImage;
+
+    protected override void Awake()
     {
-        
+        svgImage = transform.GetComponent<SVGImage>();
+        svgImage.color = Color.white;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void ChangeColor()
     {
-        
+        if (Data.uStyle == UStyle.White)
+        {
+            svgImage.DOColor(Color.black, 0.5f); 
+        }
+        if (Data.uStyle == UStyle.Black)
+        {
+            svgImage.DOColor(Color.white, 0.5f); 
+        }
+    }
+     
+    public void ChangeStyle()
+    {
+        ChangeColor();
     }
 }

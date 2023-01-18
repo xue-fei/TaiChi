@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class UToggle : Toggle
+public class UToggle : Toggle, IChangeStyle
 {
     public SVGImage background;
     public SVGImage checkmark;
@@ -51,20 +51,12 @@ public class UToggle : Toggle
             background.DOColor(Color.black, 0.5f);
             checkmark.DOColor(Color.black, 0.5f);
             text.DOColor(Color.black, 0.5f);
-
-            //background.color = Color.black;
-            //checkmark.color = Color.black;
-            //text.color = Color.black;
         }
         if (Data.uStyle == UStyle.Black)
         {
             background.DOColor(Color.white, 0.5f);
             checkmark.DOColor(Color.white, 0.5f);
             text.DOColor(Color.white, 0.5f);
-
-            //background.color = Color.white;
-            //checkmark.color = Color.white;
-            //text.color = Color.white;
         }
     }
 

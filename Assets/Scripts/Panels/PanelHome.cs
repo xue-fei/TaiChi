@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PanelHome : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
+    public Transform taichi;
+    Vector3 RotationSpeed = Vector3.forward * -135f;
 
+    private void Start()
+    {
+        taichi = transform.Find("taichi");
     }
 
-    // Update is called once per frame
-    void Update()
+    private void LateUpdate()
     {
-
-    }
+        taichi.transform.Rotate(RotationSpeed * Time.deltaTime, Space.Self);
+    } 
 }

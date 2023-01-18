@@ -12,9 +12,10 @@ public class Menu : MonoBehaviour
 
     public USlider uSlider;
     public Image background;
-
+     
     public GameObject panelHome;
     public GameObject panelPicture;
+    public UButton buttonRefresh;
     public GameObject panelMusic;
     public GameObject panelVideo;
     public GameObject panelStory;
@@ -35,9 +36,7 @@ public class Menu : MonoBehaviour
         toggleMusic.onValueChanged.AddListener((value) => OnToggle(value, toggleMusic));
         toggleVideo.onValueChanged.AddListener((value) => OnToggle(value, toggleVideo));
         toggleStory.onValueChanged.AddListener((value) => OnToggle(value, toggleStory));
-
-
-
+         
         background = transform.parent.Find("Background").GetComponent<Image>();
         uSlider = transform.Find("Slider").GetComponent<USlider>();
         uSlider.value = 1f;
@@ -45,17 +44,12 @@ public class Menu : MonoBehaviour
 
         panelHome = transform.parent.Find("PanelHome").gameObject;
         panelPicture = transform.parent.Find("PanelPicture").gameObject;
+        buttonRefresh = panelPicture.transform.Find("ButtonRefresh").GetComponent<UButton>();
         panelMusic = transform.parent.Find("PanelMusic").gameObject;
         panelVideo = transform.parent.Find("PanelVideo").gameObject;
         panelStory = transform.parent.Find("PanelStory").gameObject;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+     
     void OnClickSlider()
     {
         toggleHome.ChangeStyle();
@@ -63,6 +57,7 @@ public class Menu : MonoBehaviour
         toggleMusic.ChangeStyle();
         toggleVideo.ChangeStyle();
         toggleStory.ChangeStyle();
+        buttonRefresh.ChangeStyle();
 
         if (Data.uStyle == UStyle.Black)
         {

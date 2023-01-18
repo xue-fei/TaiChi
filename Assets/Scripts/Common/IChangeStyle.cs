@@ -1,0 +1,5 @@
+
+interface IChangeStyle 
+{
+    void ChangeStyle();
+}
