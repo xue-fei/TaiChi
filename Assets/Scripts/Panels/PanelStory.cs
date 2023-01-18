@@ -1,35 +1,133 @@
-﻿using System.Collections;
+﻿using HtmlAgilityPack;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Text;
+using TMPro;
 using UnityEngine;
 
 public class PanelStory : MonoBehaviour
 {
     private string host = "https://txt80.com/";
-    public StoryType storyType = StoryType.xuanhuan;
+    private StoryType storyType = StoryType.dushi;
+    public TMP_Dropdown dropdown;
 
     // Start is called before the first frame update
     void Start()
     {
-        string url = host+ storyType.ToString();
-        string html;
-        HttpWebRequest Web_Request = (HttpWebRequest)WebRequest.Create(url);
-        Web_Request.Timeout = 30000;
-        Web_Request.Method = "GET";
-        Web_Request.UserAgent = "Mozilla/4.0";
-        Web_Request.Headers.Add("Accept-Encoding", "gzip, deflate");
-         
-        HttpWebResponse Web_Response = (HttpWebResponse)Web_Request.GetResponse();
-
-        if (Web_Response.ContentEncoding.ToLower() == "gzip")  // 如果使用了GZip则先解压
+        dropdown = transform.Find("Dropdown").GetComponent<TMP_Dropdown>();
+        dropdown.onValueChanged.AddListener(OnSelect);
+        storyType = StoryType.dushi;
+        Loom.RunAsync(() =>
         {
-            Debug.LogWarning("gzip");
-            using (Stream Stream_Receive = Web_Response.GetResponseStream())
+            RequestStory();
+        });
+    }
+
+    private void OnSelect(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                storyType = StoryType.dushi;
+                break;
+            case 1:
+                storyType = StoryType.yanqing;
+                break;
+            case 2:
+                storyType = StoryType.xuanhuan;
+                break;
+            case 3:
+                storyType = StoryType.wuxia;
+                break;
+            case 4:
+                storyType = StoryType.wangyou;
+                break;
+            case 5:
+                storyType = StoryType.junshi;
+                break;
+            case 6:
+                storyType = StoryType.kehuan;
+                break;
+            case 7:
+                storyType = StoryType.danmei;
+                break;
+            case 8:
+                storyType = StoryType.wenxue;
+                break;
+            case 9:
+                storyType = StoryType.qita;
+                break;
+            default:
+                storyType = StoryType.dushi;
+                break;
+        }
+        RequestStory();
+    }
+
+    private void RequestStory()
+    {
+        List<StoryInfo> storyInfos = new List<StoryInfo>();
+        string storyUrl = host + storyType.ToString();
+        string html1 = RequestHtml(storyUrl);
+        Debug.LogWarning(storyUrl);
+        if (string.IsNullOrEmpty(html1))
+        {
+            storyInfos.Clear();
+            RequestStory();
+        }
+        HtmlDocument doc1 = new HtmlDocument();
+        doc1.LoadHtml(html1); 
+        string Name;
+        string ImgUrl; 
+        var hrefNodes = doc1.DocumentNode.SelectNodes("//div[@class='pic']//a");
+        foreach (HtmlNode node in hrefNodes)
+        {
+            HtmlNode cnode = node.SelectSingleNode("./img[@src]");
+            ImgUrl = cnode.Attributes["src"].Value;
+            Debug.LogWarning(ImgUrl);
+            Name = cnode.Attributes["alt"].Value.Replace("图片", "");
+            Debug.LogWarning(Name);
+
+            string herf1 = "https://txt80.com" + node.Attributes["href"].Value;
+            Debug.LogWarning(herf1);
+            string html2 = RequestHtml(herf1);
+            HtmlDocument doc2 = new HtmlDocument();
+            doc2.LoadHtml(html2);
+            HtmlNode dnode = doc2.DocumentNode.SelectSingleNode("//div[@class='downlinks']//a[@href]");
+
+            string herf2 = "https://txt80.com" + dnode.Attributes["href"].Value;
+            Debug.LogWarning(herf2);
+            string html3 = RequestHtml(herf2);
+            HtmlDocument doc3 = new HtmlDocument();
+            doc3.LoadHtml(html3);
+            HtmlNode enode = doc3.DocumentNode.SelectSingleNode("//div[@class='downlist']//a[@href]");
+            string DownUrl = enode.Attributes["href"].Value;
+            Debug.LogWarning(DownUrl);
+            StoryInfo storyInfo = new StoryInfo();
+            storyInfo.Name = Name;
+            storyInfo.ImgUrl = ImgUrl;
+            storyInfo.DownUrl = DownUrl;
+            storyInfos.Add(storyInfo);
+        }
+    }
+
+    private string RequestHtml(string url)
+    {
+        string html = null;
+        HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
+        webRequest.Timeout = 30000;
+        webRequest.Method = "GET";
+        webRequest.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0";
+        webRequest.Headers.Add("Accept-Encoding", "gzip, deflate");
+        HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse();
+        // 如果使用了GZip则先解压
+        if (webResponse.ContentEncoding.ToLower() == "gzip")
+        {
+            using (Stream stream = webResponse.GetResponseStream())
             {
-                using (var Zip_Stream = new GZipStream(Stream_Receive, CompressionMode.Decompress))
+                using (var Zip_Stream = new GZipStream(stream, CompressionMode.Decompress))
                 {
                     using (StreamReader Stream_Reader = new StreamReader(Zip_Stream, Encoding.Default))
                     {
@@ -40,20 +138,21 @@ public class PanelStory : MonoBehaviour
         }
         else
         {
-            using (Stream Stream_Receive = Web_Response.GetResponseStream())
+            using (Stream stream = webResponse.GetResponseStream())
             {
-                using (StreamReader Stream_Reader = new StreamReader(Stream_Receive, Encoding.Default))
+                using (StreamReader streamReader = new StreamReader(stream, Encoding.Default))
                 {
-                    html = Stream_Reader.ReadToEnd();
+                    html = streamReader.ReadToEnd();
                 }
             }
         }
-        Debug.LogWarning(html);
+        return html;
     }
 
-    // Update is called once per frame
-    void Update()
+    public class StoryInfo
     {
-        
+        public string Name;
+        public string ImgUrl;
+        public string DownUrl;
     }
 }

@@ -9,7 +9,7 @@ public enum StoryType
      wuxia,
      wangyou,
      junshi,
-     kuhuan,
+     kehuan,
      danmei,
      wenxue,
      qita,

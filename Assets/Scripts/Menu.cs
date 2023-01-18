@@ -12,17 +12,19 @@ public class Menu : MonoBehaviour
 
     public USlider uSlider;
     public Image background;
-     
+
     public GameObject panelHome;
     public GameObject panelPicture;
     public UButton buttonRefresh;
     public GameObject panelMusic;
     public GameObject panelVideo;
     public GameObject panelStory;
-
+ 
     // Start is called before the first frame update
     void Start()
     {
+        Loom.Initialize();
+
         Transform toggles = transform.Find("Toggles");
         toggleHome = toggles.Find("ToggleHome").GetComponent<UToggle>();
         togglePicture = toggles.Find("TogglePicture").GetComponent<UToggle>();
@@ -36,7 +38,7 @@ public class Menu : MonoBehaviour
         toggleMusic.onValueChanged.AddListener((value) => OnToggle(value, toggleMusic));
         toggleVideo.onValueChanged.AddListener((value) => OnToggle(value, toggleVideo));
         toggleStory.onValueChanged.AddListener((value) => OnToggle(value, toggleStory));
-         
+
         background = transform.parent.Find("Background").GetComponent<Image>();
         uSlider = transform.Find("Slider").GetComponent<USlider>();
         uSlider.value = 1f;
@@ -49,7 +51,7 @@ public class Menu : MonoBehaviour
         panelVideo = transform.parent.Find("PanelVideo").gameObject;
         panelStory = transform.parent.Find("PanelStory").gameObject;
     }
-     
+
     void OnClickSlider()
     {
         toggleHome.ChangeStyle();
@@ -71,14 +73,14 @@ public class Menu : MonoBehaviour
 
     void OnToggle(bool value, UToggle uToggle)
     {
-        if(value)
+        if (value)
         {
             panelHome.SetActive(false);
             panelPicture.SetActive(false);
             panelMusic.SetActive(false);
             panelVideo.SetActive(false);
             panelStory.SetActive(false);
-            if(uToggle.name == toggleHome.name)
+            if (uToggle.name == toggleHome.name)
             {
                 panelHome.SetActive(true);
             }
