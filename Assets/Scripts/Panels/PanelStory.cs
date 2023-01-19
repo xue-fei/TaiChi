@@ -1,6 +1,4 @@
-﻿using EnhancedUI;
-using EnhancedUI.EnhancedScroller;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -9,23 +7,22 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 
-public class PanelStory : MonoBehaviour, IEnhancedScrollerDelegate
+public class PanelStory : MonoBehaviour 
 {
     private string host = "https://txt80.com/";
     private StoryType storyType = StoryType.dushi;
     public TMP_Dropdown dropdown;
-    public EnhancedScroller scroller;
+    public StoryScrollView scrollView; 
     public StoryItem storyItemPrefab;
     public List<GameObject> storyItems;
-    private SmallList<StoryInfo> storyInfos;
-
+    private List<StoryInfo> storyInfos;
+     
     // Start is called before the first frame update
     void Start()
     {
-        storyInfos = new SmallList<StoryInfo>();
+        storyInfos = new List<StoryInfo>();
         storyItems = new List<GameObject>();
-        scroller = transform.Find("Scroller").GetComponent<EnhancedScroller>();
-        scroller.Delegate = this;
+        scrollView = transform.Find("Scroll View").GetComponent<StoryScrollView>(); 
         dropdown = transform.Find("Dropdown").GetComponent<TMP_Dropdown>();
         dropdown.onValueChanged.AddListener(OnSelect);
         storyType = StoryType.dushi;
@@ -91,7 +88,7 @@ public class PanelStory : MonoBehaviour, IEnhancedScrollerDelegate
         });
         Loom.QueueOnMainThread(() =>
         {
-            scroller.ReloadData();
+            scrollView.UpdateData(storyInfos);
         });
         string storyUrl = host + storyType.ToString();
         string html1 = RequestHtml(storyUrl);
@@ -133,11 +130,12 @@ public class PanelStory : MonoBehaviour, IEnhancedScrollerDelegate
             storyInfo.ImgUrl = ImgUrl;
             storyInfo.DownUrl = DownUrl;
             storyInfos.Add(storyInfo);
+
+            Loom.QueueOnMainThread(() =>
+            {
+                scrollView.UpdateData(storyInfos);
+            });
         }
-        Loom.QueueOnMainThread(() =>
-        {
-            scroller.ReloadData();
-        });
     }
 
     private string RequestHtml(string url)
@@ -174,25 +172,6 @@ public class PanelStory : MonoBehaviour, IEnhancedScrollerDelegate
             }
         }
         return html;
-    }
-
-    public int GetNumberOfCells(EnhancedScroller scroller)
-    {
-        return storyInfos.Count;
-    }
-
-    public float GetCellViewSize(EnhancedScroller scroller, int dataIndex)
-    {
-        return 100f;
-    }
-
-    public EnhancedScrollerCellView GetCellView(EnhancedScroller scroller, int dataIndex, int cellIndex)
-    {
-        StoryItem storyItem = scroller.GetCellView(storyItemPrefab) as StoryItem;
-        storyItem.name = dataIndex.ToString();
-        storyItem.SetData(storyInfos[dataIndex]);
-        storyItems.Add(storyItem.gameObject);
-        return storyItem;
     }
 }
 
