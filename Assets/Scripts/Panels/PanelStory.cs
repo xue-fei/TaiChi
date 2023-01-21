@@ -6,26 +6,37 @@ using System.Net;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class PanelStory : MonoBehaviour 
+public class PanelStory : MonoBehaviour
 {
     private string host = "https://txt80.com/";
     private StoryType storyType = StoryType.dushi;
     public TMP_Dropdown dropdown;
-    public StoryScrollView scrollView; 
+    public StoryScrollView scrollView;
     public StoryItem storyItemPrefab;
     public List<GameObject> storyItems;
     private List<StoryInfo> storyInfos;
-     
+    public Button buttonLast;
+    public Button buttonNext;
+    /// <summary>
+    /// 当前页
+    /// </summary>
+    private int nowPage = 1;
+
     // Start is called before the first frame update
     void Start()
     {
         storyInfos = new List<StoryInfo>();
         storyItems = new List<GameObject>();
-        scrollView = transform.Find("Scroll View").GetComponent<StoryScrollView>(); 
+        scrollView = transform.Find("Scroll View").GetComponent<StoryScrollView>();
         dropdown = transform.Find("Dropdown").GetComponent<TMP_Dropdown>();
         dropdown.onValueChanged.AddListener(OnSelect);
         storyType = StoryType.dushi;
+        buttonLast = transform.Find("ButtonLast").GetComponent<Button>();
+        buttonNext = transform.Find("ButtonNext").GetComponent<Button>();
+        buttonLast.onClick.AddListener(PageLast);
+        buttonNext.onClick.AddListener(PageNext);
         Loom.RunAsync(() =>
         {
             RequestStory();
@@ -76,6 +87,28 @@ public class PanelStory : MonoBehaviour
         });
     }
 
+    private void PageLast()
+    {
+        nowPage--;
+        if (nowPage < 1)
+        {
+            nowPage = 1;
+        }
+        Loom.RunAsync(() =>
+        {
+            RequestStory();
+        });
+    }
+
+    private void PageNext()
+    {
+        nowPage++;
+        Loom.RunAsync(() =>
+        {
+            RequestStory();
+        }); 
+    }
+
     private void RequestStory()
     {
         storyInfos.Clear();
@@ -90,11 +123,20 @@ public class PanelStory : MonoBehaviour
         {
             scrollView.UpdateData(storyInfos);
         });
-        string storyUrl = host + storyType.ToString();
+        string index;
+        if (nowPage == 1)
+        {
+            index = "/index.html";
+        }
+        else
+        {
+            index = "/index_" + nowPage + ".html";
+        }
+        string storyUrl = host + storyType.ToString() + index;
         string html1 = RequestHtml(storyUrl);
         Debug.LogWarning(storyUrl);
         if (string.IsNullOrEmpty(html1))
-        { 
+        {
             RequestStory();
         }
         HtmlDocument doc1 = new HtmlDocument();
