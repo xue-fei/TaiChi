@@ -1,16 +1,21 @@
-using FancyScrollView;
-using TMPro; 
+﻿using FancyScrollView; 
+using System.Net;
+using TMPro;
+using UnityEngine; 
 using UnityEngine.UI;
 
 public class StoryItem : FancyScrollRectCell<StoryInfo, StoryContext>
 {
-    public Image image; 
-    public TextMeshProUGUI textTitle;
+    public Image image;
+    public TextMeshProUGUI textName;
+    public TextMeshProUGUI textBrief;
     public Button button;
-     
+    private StoryInfo storyInfo;
+
     public override void UpdateContent(StoryInfo storyInfo)
     {
-        textTitle.text = storyInfo.Name;
+        this.storyInfo = storyInfo;
+        textName.text = storyInfo.Name;
         ImgLoader.Instance.DownLoad(image, storyInfo.ImgUrl);
     }
 
@@ -20,5 +25,15 @@ public class StoryItem : FancyScrollRectCell<StoryInfo, StoryContext>
 
         //var wave = Mathf.Sin(normalizedPosition * Mathf.PI * 2) * 65;
         //transform.localPosition += Vector3.right * wave;
+        button.onClick.RemoveAllListeners();
+        button.onClick.AddListener(async () =>
+        {
+            string filePath = Application.streamingAssetsPath + "/Story/" + storyInfo.Name + ".txt";
+            using (var web = new WebClient())
+            {
+                await web.DownloadFileTaskAsync(storyInfo.DownUrl, filePath);
+                Debug.LogWarning(storyInfo.Name+" 下载完成");
+            }
+        });
     }
 }

@@ -158,6 +158,8 @@ public class PanelStory : MonoBehaviour
             HtmlDocument doc2 = new HtmlDocument();
             doc2.LoadHtml(html2);
             HtmlNode dnode = doc2.DocumentNode.SelectSingleNode("//div[@class='downlinks']//a[@href]");
+            //简介
+            //HtmlNode bnode = doc2.DocumentNode.SelectSingleNode("//div[@class='downlinks']//a[@href]");
 
             string herf2 = "https://txt80.com" + dnode.Attributes["href"].Value;
             Debug.LogWarning(herf2);
@@ -165,7 +167,7 @@ public class PanelStory : MonoBehaviour
             HtmlDocument doc3 = new HtmlDocument();
             doc3.LoadHtml(html3);
             HtmlNode enode = doc3.DocumentNode.SelectSingleNode("//div[@class='downlist']//a[@href]");
-            string DownUrl = enode.Attributes["href"].Value;
+            string DownUrl = enode.Attributes["href"].Value.Trim();
             Debug.LogWarning(DownUrl);
             StoryInfo storyInfo = new StoryInfo();
             storyInfo.Name = Name;
@@ -220,6 +222,7 @@ public class PanelStory : MonoBehaviour
 public class StoryInfo
 {
     public string Name;
+    public string Brief;
     public string ImgUrl;
     public string DownUrl;
 }
