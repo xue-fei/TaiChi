@@ -31,7 +31,7 @@ public class ImgLoader : MonoBehaviour
     public void DownLoad(Image image, string url)
     {
         if (url != "")
-        { 
+        {
             StartCoroutine(LoadTexture(image, url));
         }
         else
@@ -53,9 +53,10 @@ public class ImgLoader : MonoBehaviour
         }
         string md5 = GetMD5WithString(url);
         bool ready = false;
-        if (File.Exists(imagePath + "/" + md5))
+        string filePath = imagePath + "/" + md5 + ".jpg";
+        if (File.Exists(filePath))
         {
-            url = "file:///" + imagePath + "/" + md5;
+            url = "file:///" + filePath;
             ready = true;
             Debug.LogWarning("本地已缓存");
         }
@@ -75,13 +76,13 @@ public class ImgLoader : MonoBehaviour
                 Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
                 if (!ready)
                 {
-                    File.WriteAllBytes(imagePath + "/" + md5, uwr.downloadHandler.data);
-                    Debug.LogWarning("缓存到本地");
+                    File.WriteAllBytesAsync(filePath, uwr.downloadHandler.data);
+                    Debug.LogWarning("缓存到本地"); 
                 }
                 if (image != null)
                 {
                     image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                } 
+                }
             }
         }
     }

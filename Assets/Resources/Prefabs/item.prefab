@@ -97,6 +97,7 @@ MonoBehaviour:
   textName: {fileID: 4615445023926292920}
   textBrief: {fileID: 1568184440777784240}
   button: {fileID: 3368756328162106805}
+  textButton: {fileID: 3368756328253526553}
 --- !u!1 &3368756328162106807
 GameObject:
   m_ObjectHideFlags: 0
