@@ -48,7 +48,7 @@ namespace FancyScrollView.Example09
                 {
                     yield return request.SendWebRequest();
 
-                    if (request.isNetworkError)
+                    if (request.result != UnityWebRequest.Result.Success)
                     {
                         Debug.LogErrorFormat("Error: {0}", request.error);
                         yield break;
@@ -56,7 +56,7 @@ namespace FancyScrollView.Example09
 
                     onSuccess((
                         url,
-                        ((DownloadHandlerTexture) request.downloadHandler).texture
+                        ((DownloadHandlerTexture)request.downloadHandler).texture
                     ));
                 }
             }
