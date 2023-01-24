@@ -1,43 +1,51 @@
 using DG.Tweening;
+using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class PanelPicture : MonoBehaviour
 {
-    public RawImage rawImage;
+    public Image image;
     string beautyUrl = "https://v.api.aa1.cn/api/pc-girl_bz/index.php?wpon=ro38d57y8rhuwur3788y3rd";
     public Button buttonRefresh;
 
     // Start is called before the first frame update
     void Start()
     {
-        rawImage = transform.Find("RawImage").GetComponent<RawImage>();
+        image = transform.Find("Image").GetComponent<Image>();
         buttonRefresh = transform.Find("ButtonRefresh").GetComponent<Button>();
         buttonRefresh.onClick.AddListener(() => StartCoroutine(RequestBeauty()));
-        StartCoroutine(RequestBeauty()); 
+        StartCoroutine(RequestBeauty());
     }
-     
+
     private IEnumerator RequestBeauty()
-    {
-        rawImage.DOColor(Color.black, 0.2f);
+    { 
         using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(beautyUrl))
         {
             yield return uwr.SendWebRequest();
 
             if (uwr.result != UnityWebRequest.Result.Success)
-            { 
+            {
+                Debug.LogError(uwr.error);
                 uwr.Dispose();
                 StartCoroutine(RequestBeauty());
                 yield break;
             }
             else
             {
+                image.DOColor(Color.black, 0.2f);
                 Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
-                rawImage.texture = texture;
-                rawImage.DOColor(Color.white, 0.2f);
+                string filePath = Application.streamingAssetsPath + "/Picture/"
+                    + DateTime.Now.ToFileTime() + ".jpg";
+                File.WriteAllBytesAsync(filePath, uwr.downloadHandler.data);
+                if (image != null)
+                {
+                    image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                }
+                image.DOColor(Color.white, 0.2f);
             }
         }
     }
