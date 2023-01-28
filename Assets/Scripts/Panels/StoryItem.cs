@@ -30,10 +30,10 @@ public class StoryItem : FancyScrollRectCell<StoryInfo, StoryContext>
                 {
                     using (var web = new WebClient())
                     {
-                        web.DownloadProgressChanged += (s, e) =>
-                        {
-                            Debug.LogWarning(e.ProgressPercentage + "%");
-                        };
+                        //web.DownloadProgressChanged += (s, e) =>
+                        //{
+                        //    Debug.LogWarning(e.ProgressPercentage + "%");
+                        //};
                         await web.DownloadFileTaskAsync(storyInfo.DownUrl, filePath);
                         Loom.QueueOnMainThread(() =>
                         {
@@ -69,7 +69,6 @@ public class StoryItem : FancyScrollRectCell<StoryInfo, StoryContext>
         {
             storyInfo.ImgUrl = "file:///" + filePath;
             ready = true;
-            Debug.LogWarning("本地已缓存");
         }
 
         using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(storyInfo.ImgUrl))
@@ -88,7 +87,6 @@ public class StoryItem : FancyScrollRectCell<StoryInfo, StoryContext>
                 if (!ready)
                 {
                     File.WriteAllBytesAsync(filePath, uwr.downloadHandler.data);
-                    Debug.LogWarning("缓存到本地");
                 }
                 if (image != null)
                 {

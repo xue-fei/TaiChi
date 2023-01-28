@@ -14,11 +14,11 @@ public class PanelStory : MonoBehaviour
     private StoryType storyType = StoryType.dushi;
     public TMP_Dropdown dropdown;
     public StoryScrollView scrollView;
-    public StoryItem storyItemPrefab;
     public List<GameObject> storyItems;
     private List<StoryInfo> storyInfos;
     public Button buttonLast;
     public Button buttonNext;
+    public TextMeshProUGUI textPage;
     /// <summary>
     /// 当前页
     /// </summary>
@@ -40,6 +40,7 @@ public class PanelStory : MonoBehaviour
         storyType = StoryType.dushi;
         buttonLast = transform.Find("ButtonLast").GetComponent<Button>();
         buttonNext = transform.Find("ButtonNext").GetComponent<Button>();
+        textPage = transform.Find("Page/Text (TMP)").GetComponent<TextMeshProUGUI>();
         buttonLast.onClick.AddListener(PageLast);
         buttonNext.onClick.AddListener(PageNext);
         Loom.RunAsync(() =>
@@ -86,6 +87,8 @@ public class PanelStory : MonoBehaviour
                 storyType = StoryType.dushi;
                 break;
         }
+        nowPage = 1;
+        textPage.text = nowPage.ToString();
         Loom.RunAsync(() =>
         {
             RequestStory();
@@ -99,6 +102,7 @@ public class PanelStory : MonoBehaviour
         {
             nowPage = 1;
         }
+        textPage.text = nowPage.ToString();
         Loom.RunAsync(() =>
         {
             RequestStory();
@@ -108,6 +112,7 @@ public class PanelStory : MonoBehaviour
     private void PageNext()
     {
         nowPage++;
+        textPage.text = nowPage.ToString();
         Loom.RunAsync(() =>
         {
             RequestStory();
@@ -160,18 +165,18 @@ public class PanelStory : MonoBehaviour
             string herf1 = "https://txt80.com" + node.Attributes["href"].Value;
             Debug.LogWarning(herf1);
 
-            //string html2 = RequestHtml(herf1);
-            //HtmlDocument doc2 = new HtmlDocument();
-            //doc2.LoadHtml(html2);
-            //HtmlNode dnode = doc2.DocumentNode.SelectSingleNode("//div[@class='downlinks']//a[@href]");
+            string html2 = RequestHtml(herf1);
+            HtmlDocument doc2 = new HtmlDocument();
+            doc2.LoadHtml(html2);
+            HtmlNode dnode = doc2.DocumentNode.SelectSingleNode("//div[@class='downlinks']//a[@href]");
 
             //简介
             //HtmlNode bnode = doc2.DocumentNode.SelectSingleNode("//div[@class='downlinks']//a[@href]");
 
-            herf1 = herf1.Replace(storyType.ToString()+"/txt", "down/txt1c");
-            string herf2 = herf1.Replace(".html", "b0.html"); 
+            //herf1 = herf1.Replace(storyType.ToString()+"/txt", "down/txt1c");
+            //string herf2 = herf1.Replace(".html", "b0.html"); 
 
-            //string herf2 = "https://txt80.com" + dnode.Attributes["href"].Value;
+            string herf2 = "https://txt80.com" + dnode.Attributes["href"].Value;
             Debug.LogWarning(herf2);
             string html3 = RequestHtml(herf2);
             HtmlDocument doc3 = new HtmlDocument();
