@@ -18,7 +18,6 @@ public class USlider : Slider, IChangeStyle
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        Debug.LogWarning("嘿嘿嘿");
         ChangeStyle();
         onClick?.Invoke();
     }
@@ -40,6 +39,5 @@ public class USlider : Slider, IChangeStyle
             text.DOColor(Color.black, 0.5f);
             Data.uStyle = UStyle.White;
         }
-        Debug.LogWarning(text.text);
     }
 }
