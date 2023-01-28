@@ -27,6 +27,11 @@ public class PanelStory : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        string storyPath = Application.persistentDataPath + "/Story";
+        if(!Directory.Exists(storyPath))
+        {
+            Directory.CreateDirectory(storyPath);
+        }
         storyInfos = new List<StoryInfo>();
         storyItems = new List<GameObject>();
         scrollView = transform.Find("Scroll View").GetComponent<StoryScrollView>();
@@ -106,7 +111,7 @@ public class PanelStory : MonoBehaviour
         Loom.RunAsync(() =>
         {
             RequestStory();
-        }); 
+        });
     }
 
     private void RequestStory()
@@ -154,14 +159,19 @@ public class PanelStory : MonoBehaviour
 
             string herf1 = "https://txt80.com" + node.Attributes["href"].Value;
             Debug.LogWarning(herf1);
-            string html2 = RequestHtml(herf1);
-            HtmlDocument doc2 = new HtmlDocument();
-            doc2.LoadHtml(html2);
-            HtmlNode dnode = doc2.DocumentNode.SelectSingleNode("//div[@class='downlinks']//a[@href]");
+
+            //string html2 = RequestHtml(herf1);
+            //HtmlDocument doc2 = new HtmlDocument();
+            //doc2.LoadHtml(html2);
+            //HtmlNode dnode = doc2.DocumentNode.SelectSingleNode("//div[@class='downlinks']//a[@href]");
+
             //简介
             //HtmlNode bnode = doc2.DocumentNode.SelectSingleNode("//div[@class='downlinks']//a[@href]");
 
-            string herf2 = "https://txt80.com" + dnode.Attributes["href"].Value;
+            herf1 = herf1.Replace(storyType.ToString()+"/txt", "down/txt1c");
+            string herf2 = herf1.Replace(".html", "b0.html"); 
+
+            //string herf2 = "https://txt80.com" + dnode.Attributes["href"].Value;
             Debug.LogWarning(herf2);
             string html3 = RequestHtml(herf2);
             HtmlDocument doc3 = new HtmlDocument();
