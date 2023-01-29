@@ -11,7 +11,13 @@ public class PanelVideo : MonoBehaviour
     public MediaPlayer mediaPlayer;
     public DisplayUGUI displayUGUI;
     public TMP_Dropdown dropdown;
+    string nowUrl = "";
     VideoType videoType = VideoType.Girl1;
+
+    /// <summary>
+    /// 小姐姐短视频
+    /// </summary>
+    string girl1Url = "https://tucdn.wpon.cn/api-girl/index.php?wpon=json";
     /// <summary>
     /// PC端风景视频
     /// </summary>
@@ -19,11 +25,11 @@ public class PanelVideo : MonoBehaviour
     /// <summary>
     /// 小姐姐短视频
     /// </summary>
-    string girl1Url = "https://tucdn.wpon.cn/api-girl/index.php?wpon=json";
-    /// <summary>
-    /// 小姐姐短视频
-    /// </summary>
     string girl2Url = "https://zj.v.api.aa1.cn/api/video_dyv2";
+    /// <summary>
+    /// 高质量小姐姐秒播线路
+    /// </summary>
+    string girl3Url = "https://v.api.aa1.cn/api/api-girl-11-02/index.php?type=json";
 
     private void Awake()
     {
@@ -32,6 +38,7 @@ public class PanelVideo : MonoBehaviour
         displayUGUI = transform.Find("AV Pro Video uGUI").GetComponent<DisplayUGUI>();
         dropdown = transform.Find("Dropdown").GetComponent<TMP_Dropdown>();
         dropdown.onValueChanged.AddListener(OnSelect);
+        nowUrl = girl1Url;
     }
 
     // Start is called before the first frame update
@@ -45,12 +52,12 @@ public class PanelVideo : MonoBehaviour
         switch (et)
         {
             case MediaPlayerEvent.EventType.FirstFrameReady:
-                { 
+                {
                     displayUGUI.DOColor(Color.white, 0.3f);
                 }
                 break;
             case MediaPlayerEvent.EventType.FinishedPlaying:
-                {  
+                {
                     PlayVideo();
                 }
                 break;
@@ -66,28 +73,17 @@ public class PanelVideo : MonoBehaviour
     private void PlayVideo()
     {
         displayUGUI.DOColor(Data.blackColor, 0.3f);
-        if (videoType == VideoType.Scenery)
-        {
-            mediaPlayer.OpenMedia(MediaPathType.AbsolutePathOrURL, sceneryUrl, true);
-        }
-        if (videoType == VideoType.Girl1 || videoType == VideoType.Girl2)
-        {
-            StartCoroutine(RequestVideoUrl());
-        }
+        StartCoroutine(RequestVideoUrl());
     }
 
     private IEnumerator RequestVideoUrl()
     {
-        string requestUrl = "";
-        if (videoType == VideoType.Girl1)
+        if (videoType == VideoType.Scenery)
         {
-            requestUrl = girl1Url;
+            mediaPlayer.OpenMedia(MediaPathType.AbsolutePathOrURL, nowUrl, true);
+            yield break;
         }
-        if (videoType == VideoType.Girl2)
-        {
-            requestUrl = girl2Url;
-        }
-        UnityWebRequest uwr = UnityWebRequest.Get(requestUrl);
+        UnityWebRequest uwr = UnityWebRequest.Get(nowUrl);
         yield return uwr.SendWebRequest();
         if (uwr.result != UnityWebRequest.Result.Success)
         {
@@ -111,6 +107,12 @@ public class PanelVideo : MonoBehaviour
                     JsonUtility.FromJsonOverwrite(uwr.downloadHandler.text, data);
                     videoUrl = data.url;
                 }
+                if (videoType == VideoType.Girl3)
+                {
+                    Girl1Data data = new Girl1Data();
+                    JsonUtility.FromJsonOverwrite(uwr.downloadHandler.text, data);
+                    videoUrl = "https:" + data.mp4;
+                }
             }
             catch (Exception e)
             {
@@ -127,15 +129,23 @@ public class PanelVideo : MonoBehaviour
         {
             case 0:
                 videoType = VideoType.Girl1;
+                nowUrl = girl1Url;
                 break;
             case 1:
                 videoType = VideoType.Scenery;
+                nowUrl = sceneryUrl;
                 break;
             case 2:
                 videoType = VideoType.Girl2;
+                nowUrl = girl2Url;
+                break;
+            case 3:
+                videoType = VideoType.Girl3;
+                nowUrl = girl3Url;
                 break;
             default:
                 videoType = VideoType.Scenery;
+                nowUrl = sceneryUrl;
                 break;
         }
 
@@ -153,6 +163,7 @@ public class PanelVideo : MonoBehaviour
         /// </summary>
         Girl1,
         Girl2,
+        Girl3,
     }
 
     public class Girl1Data
