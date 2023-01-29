@@ -17,7 +17,7 @@ public class UButton : Button, IChangeStyle
     {
         if (Data.uStyle == UStyle.White)
         {
-            svgImage.DOColor(Color.black, 0.5f); 
+            svgImage.DOColor(Data.blackColor, 0.5f); 
         }
         if (Data.uStyle == UStyle.Black)
         {

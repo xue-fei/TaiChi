@@ -64,7 +64,7 @@ public class Menu : MonoBehaviour
 
         if (Data.uStyle == UStyle.Black)
         {
-            background.DOColor(Color.black, 0.5f);
+            background.DOColor(Data.blackColor, 0.5f);
         }
         if (Data.uStyle == UStyle.White)
         {
