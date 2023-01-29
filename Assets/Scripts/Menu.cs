@@ -22,10 +22,7 @@ public class Menu : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-        Loom.Initialize();
-        ImgLoader imgLoader = gameObject.AddComponent<ImgLoader>();
-        imgLoader.Init();
+    { 
         Transform toggles = transform.Find("Toggles");
         toggleHome = toggles.Find("ToggleHome").GetComponent<UToggle>();
         togglePicture = toggles.Find("TogglePicture").GetComponent<UToggle>();

@@ -45,6 +45,7 @@ public class Loom : MonoBehaviour
         public float time;
         public Action action;
     }
+
     private List<DelayedQueueItem> _delayed = new List<DelayedQueueItem>();
 
     List<DelayedQueueItem> _currentDelayed = new List<DelayedQueueItem>();
@@ -56,6 +57,7 @@ public class Loom : MonoBehaviour
     {
         QueueOnMainThread(action, 0f);
     }
+
     public static void QueueOnMainThread(Action action, float time)
     {
         if (time != 0)
@@ -105,7 +107,6 @@ public class Loom : MonoBehaviour
         {
             Interlocked.Decrement(ref numThreads);
         }
-
     }
 
 
@@ -115,12 +116,6 @@ public class Loom : MonoBehaviour
         {
             _current = null;
         }
-    }
-
-    // Use this for initialization  
-    void Start()
-    {
-
     }
 
     List<Action> _currentActions = new List<Action>();

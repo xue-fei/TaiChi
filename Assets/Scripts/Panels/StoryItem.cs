@@ -18,7 +18,7 @@ public class StoryItem : FancyScrollRectCell<StoryInfo, StoryContext>
     public override void UpdateContent(StoryInfo storyInfo)
     {
         textName.text = storyInfo.Name;
-        StartCoroutine(LoadTexture(image, storyInfo));
+        Driver.Instance.StartCoroutine(LoadTexture(image, storyInfo));
         string filePath = Application.persistentDataPath + "/Story/" + storyInfo.Name + ".txt";
         button.onClick.RemoveAllListeners();
         if (!File.Exists(filePath))
