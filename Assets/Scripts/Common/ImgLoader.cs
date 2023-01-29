@@ -28,6 +28,64 @@ public class ImgLoader : MonoBehaviour
         Instance = this;
     }
 
+    public void DownLoad(Image image, string url, string savePath, string fileName)
+    {
+        if (url != "")
+        {
+            StartCoroutine(LoadTexture(image, url, savePath, fileName));
+        }
+        else
+        {
+            Debug.LogWarning("url:" + url);
+        }
+    }
+
+    /// <summary>
+    /// 加载图片
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    private IEnumerator LoadTexture(Image image, string url, string savePath, string fileName)
+    {
+        if (url == "")
+        {
+            yield break;
+        } 
+        bool ready = false;
+        string filePath = savePath + "/" + fileName + ".jpg";
+        if (File.Exists(filePath))
+        {
+            url = "file:///" + filePath;
+            ready = true;
+            Debug.LogWarning("本地已缓存");
+        }
+
+        using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(url))
+        {
+            yield return uwr.SendWebRequest();
+
+            if (uwr.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogWarning("网络错误");
+                uwr.Dispose();
+                yield break;
+            }
+            else
+            {
+                Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
+                if (!ready)
+                {
+                    File.WriteAllBytesAsync(filePath, uwr.downloadHandler.data);
+                    Debug.LogWarning("缓存到本地");
+                }
+                if (image != null)
+                {
+                    image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                }
+            }
+        }
+    }
+
     public void DownLoad(Image image, string url)
     {
         if (url != "")
