@@ -13,13 +13,13 @@ public class Menu : MonoBehaviour
     public USlider uSlider;
     public Image background;
 
-    public GameObject panelHome;
+    public PanelHome panelHome;
     public GameObject panelPicture;
     public UButton buttonRefresh;
     public GameObject panelMusic;
     public GameObject panelVideo;
     public GameObject panelStory;
- 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,7 +45,7 @@ public class Menu : MonoBehaviour
         uSlider.value = 1f;
         uSlider.onClick += OnClickSlider;
 
-        panelHome = transform.parent.Find("PanelHome").gameObject;
+        panelHome = transform.parent.Find("PanelHome").GetComponent<PanelHome>();
         panelPicture = transform.parent.Find("PanelPicture").gameObject;
         buttonRefresh = panelPicture.transform.Find("ButtonRefresh").GetComponent<UButton>();
         panelMusic = transform.parent.Find("PanelMusic").gameObject;
@@ -62,6 +62,8 @@ public class Menu : MonoBehaviour
         toggleStory.ChangeStyle();
         buttonRefresh.ChangeStyle();
 
+        panelHome.ChangeStyle();
+
         if (Data.uStyle == UStyle.Black)
         {
             background.DOColor(Data.blackColor, 0.5f);
@@ -76,14 +78,14 @@ public class Menu : MonoBehaviour
     {
         if (value)
         {
-            panelHome.SetActive(false);
+            panelHome.gameObject.SetActive(false);
             panelPicture.SetActive(false);
             panelMusic.SetActive(false);
             panelVideo.SetActive(false);
             panelStory.SetActive(false);
             if (uToggle.name == toggleHome.name)
             {
-                panelHome.SetActive(true);
+                panelHome.gameObject.SetActive(true);
             }
             if (uToggle.name == togglePicture.name)
             {
