@@ -282,15 +282,7 @@ MonoBehaviour:
   m_ItemImage: {fileID: 0}
   m_Value: 0
   m_Options:
-    m_Options:
-    - m_Text: "\u5C0F\u59D0\u59D0\u77ED\u89C6\u9891"
-      m_Image: {fileID: 0}
-    - m_Text: "PC\u7AEF\u98CE\u666F\u89C6\u9891"
-      m_Image: {fileID: 0}
-    - m_Text: "\u5B9E\u65F6\u6296\u97F3\u7F8E\u5973"
-      m_Image: {fileID: 0}
-    - m_Text: "\u9AD8\u8D28\u91CF\u5C0F\u59D0\u59D0"
-      m_Image: {fileID: 0}
+    m_Options: []
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4324,7 +4316,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u5C0F\u59D0\u59D0\u77ED\u89C6\u9891"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0fb5e59ac42de854da92aaa2d4e00e2d, type: 2}
   m_sharedMaterial: {fileID: 5502537765340633718, guid: 0fb5e59ac42de854da92aaa2d4e00e2d, type: 2}
@@ -6417,7 +6409,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -80, y: 80}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657063801
 MonoBehaviour:

@@ -2,6 +2,7 @@
 using RenderHeads.Media.AVProVideo;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -23,13 +24,17 @@ public class PanelVideo : MonoBehaviour
     /// </summary>
     string sceneryUrl = "https://v.api.aa1.cn/api/api-fj/index.php?aa1=suf7y58th48u935";
     /// <summary>
-    /// 小姐姐短视频
+    /// 极品实时抖音美女主播短视频直链版
     /// </summary>
     string girl2Url = "https://zj.v.api.aa1.cn/api/video_dyv2";
     /// <summary>
     /// 高质量小姐姐秒播线路
     /// </summary>
     string girl3Url = "https://v.api.aa1.cn/api/api-girl-11-02/index.php?type=json";
+    /// <summary>
+    /// 小姐姐短视频第二版
+    /// </summary>
+    string girl4Url = "https://v.api.aa1.cn/api/api-dy-girl/index.php?aa1=json";
 
     private void Awake()
     {
@@ -38,6 +43,13 @@ public class PanelVideo : MonoBehaviour
         displayUGUI = transform.Find("AV Pro Video uGUI").GetComponent<DisplayUGUI>();
         dropdown = transform.Find("Dropdown").GetComponent<TMP_Dropdown>();
         dropdown.onValueChanged.AddListener(OnSelect);
+        List<TMP_Dropdown.OptionData> listOptions = new List<TMP_Dropdown.OptionData>();
+        listOptions.Add(new TMP_Dropdown.OptionData("小姐姐短视频"));
+        listOptions.Add(new TMP_Dropdown.OptionData("PC端风景视频"));
+        listOptions.Add(new TMP_Dropdown.OptionData("实时抖音美女"));
+        listOptions.Add(new TMP_Dropdown.OptionData("高质量小姐姐"));
+        listOptions.Add(new TMP_Dropdown.OptionData("高质量小姐姐2"));
+        dropdown.AddOptions(listOptions);
         nowUrl = girl1Url;
     }
 
@@ -95,7 +107,9 @@ public class PanelVideo : MonoBehaviour
             string videoUrl = "";
             try
             {
-                if (videoType == VideoType.Girl1)
+                if (videoType == VideoType.Girl1
+                    || videoType == VideoType.Girl3
+                    || videoType == VideoType.Girl4)
                 {
                     Girl1Data data = new Girl1Data();
                     JsonUtility.FromJsonOverwrite(uwr.downloadHandler.text, data);
@@ -106,12 +120,6 @@ public class PanelVideo : MonoBehaviour
                     Girl2Data data = new Girl2Data();
                     JsonUtility.FromJsonOverwrite(uwr.downloadHandler.text, data);
                     videoUrl = data.url;
-                }
-                if (videoType == VideoType.Girl3)
-                {
-                    Girl1Data data = new Girl1Data();
-                    JsonUtility.FromJsonOverwrite(uwr.downloadHandler.text, data);
-                    videoUrl = "https:" + data.mp4;
                 }
             }
             catch (Exception e)
@@ -143,6 +151,10 @@ public class PanelVideo : MonoBehaviour
                 videoType = VideoType.Girl3;
                 nowUrl = girl3Url;
                 break;
+            case 4:
+                videoType = VideoType.Girl4;
+                nowUrl = girl4Url;
+                break;
             default:
                 videoType = VideoType.Scenery;
                 nowUrl = sceneryUrl;
@@ -164,6 +176,7 @@ public class PanelVideo : MonoBehaviour
         Girl1,
         Girl2,
         Girl3,
+        Girl4,
     }
 
     public class Girl1Data
