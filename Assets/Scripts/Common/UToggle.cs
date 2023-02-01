@@ -18,7 +18,7 @@ public class UToggle : Toggle, IChangeStyle
         checkmark = background.transform.Find("Checkmark").GetComponent<SVGImage>();
         text = background.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
         svgImage = transform.Find("SVG Image").GetComponent<SVGImage>();
-        svgImage.color = Data.checkedColor;
+        svgImage.color = GlobalData.checkedColor;
         svgImage.gameObject.SetActive(false);
 
         background.color = Color.white;
@@ -32,9 +32,9 @@ public class UToggle : Toggle, IChangeStyle
     {
         if (value)
         {
-            background.color = Data.checkedColor;
-            checkmark.color = Data.checkedColor;
-            text.color = Data.checkedColor;
+            background.color = GlobalData.checkedColor;
+            checkmark.color = GlobalData.checkedColor;
+            text.color = GlobalData.checkedColor;
             svgImage.gameObject.SetActive(true);
         }
         else
@@ -46,13 +46,13 @@ public class UToggle : Toggle, IChangeStyle
 
     private void ChangeColor()
     {
-        if (Data.uStyle == UStyle.White)
+        if (GlobalData.uStyle == UStyle.White)
         {
-            background.DOColor(Data.blackColor, 0.5f);
-            checkmark.DOColor(Data.blackColor, 0.5f);
-            text.DOColor(Data.blackColor, 0.5f);
+            background.DOColor(GlobalData.blackColor, 0.5f);
+            checkmark.DOColor(GlobalData.blackColor, 0.5f);
+            text.DOColor(GlobalData.blackColor, 0.5f);
         }
-        if (Data.uStyle == UStyle.Black)
+        if (GlobalData.uStyle == UStyle.Black)
         {
             background.DOColor(Color.white, 0.5f);
             checkmark.DOColor(Color.white, 0.5f);

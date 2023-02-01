@@ -10,19 +10,23 @@ public class PanelPicture : MonoBehaviour
 {
     public Image image;
     string beautyUrl = "https://v.api.aa1.cn/api/pc-girl_bz/index.php?wpon=ro38d57y8rhuwur3788y3rd";
-    public Button buttonRefresh;
+    public UButton buttonRefresh;
+
+    private void Awake()
+    {
+        image = transform.Find("Image").GetComponent<Image>();
+        buttonRefresh = transform.Find("ButtonRefresh").GetComponent<UButton>();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        image = transform.Find("Image").GetComponent<Image>();
-        buttonRefresh = transform.Find("ButtonRefresh").GetComponent<Button>();
         buttonRefresh.onClick.AddListener(() => StartCoroutine(RequestBeauty()));
         StartCoroutine(RequestBeauty());
     }
 
     private IEnumerator RequestBeauty()
-    { 
+    {
         using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(beautyUrl))
         {
             yield return uwr.SendWebRequest();
@@ -48,5 +52,14 @@ public class PanelPicture : MonoBehaviour
                 image.DOColor(Color.white, 0.2f);
             }
         }
+    }
+
+    public void ChangeStyle()
+    {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+        buttonRefresh.ChangeStyle();
     }
 }

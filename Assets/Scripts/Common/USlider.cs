@@ -24,12 +24,12 @@ public class USlider : Slider, IChangeStyle
 
     public void ChangeStyle()
     {
-        if (Data.uStyle == UStyle.White)
+        if (GlobalData.uStyle == UStyle.White)
         {
             this.DOValue(1f, 0.5f);
             text.text = "黑暗";
             text.DOColor(Color.white, 0.5f);
-            Data.uStyle = UStyle.Black;
+            GlobalData.uStyle = UStyle.Black;
             return;
         }
         else
@@ -37,7 +37,7 @@ public class USlider : Slider, IChangeStyle
             this.DOValue(0f, 0.5f);
             text.text = "光明";
             text.DOColor(Color.black, 0.5f);
-            Data.uStyle = UStyle.White;
+            GlobalData.uStyle = UStyle.White;
         }
     }
 }

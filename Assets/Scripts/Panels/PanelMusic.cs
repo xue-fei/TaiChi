@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DG.Tweening;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.IO;
@@ -87,26 +88,33 @@ public class PanelMusic : MonoBehaviour
                 textName.text = apiData.data.name;
                 textSinger.text = apiData.data.singer;
                 musicUrl = apiData.data.url;
-                string coverName = apiData.data.singer + "-" + apiData.data.name;
+                string coverName = apiData.data.singer + "-" + apiData.data.name + ".jpg";
                 ImgLoader.Instance.DownLoad(image, apiData.data.cover, musicPath, coverName);
                 string musicFilePath = musicPath + "/" + apiData.data.singer + "-" + apiData.data.name + ".mp3";
                 string lyricPath = musicPath + "/" + apiData.data.singer + "-" + apiData.data.name + ".lrc";
-                Loom.RunAsync(async () =>
+                if (File.Exists(musicFilePath))
                 {
-                    File.WriteAllText(lyricPath, apiData.data.lyric);
-                    using (var web = new WebClient())
+                    StartCoroutine(PlayMusic(musicFilePath));
+                }
+                else
+                {
+                    Loom.RunAsync(async () =>
                     {
-                        //web.DownloadProgressChanged += (s, e) =>
-                        //{
-                        //    Debug.LogWarning(e.ProgressPercentage + "%");
-                        //};
-                        await web.DownloadFileTaskAsync(apiData.data.url, musicFilePath);
-                        Loom.QueueOnMainThread(() =>
+                        File.WriteAllText(lyricPath, apiData.data.lyric);
+                        using (var web = new WebClient())
                         {
-                            StartCoroutine(PlayMusic(musicFilePath));
-                        });
-                    }
-                });
+                            //web.DownloadProgressChanged += (s, e) =>
+                            //{
+                            //    Debug.LogWarning(e.ProgressPercentage + "%");
+                            //};
+                            await web.DownloadFileTaskAsync(apiData.data.url, musicFilePath);
+                            Loom.QueueOnMainThread(() =>
+                            {
+                                StartCoroutine(PlayMusic(musicFilePath));
+                            });
+                        }
+                    });
+                }
             }
             catch (Exception e)
             {
@@ -126,19 +134,39 @@ public class PanelMusic : MonoBehaviour
                 Debug.LogError(uwr.error);
                 yield break;
             }
-            AudioClip clip = null;
-            try
+            if (audioSource.clip != null)
             {
-                clip = DownloadHandlerAudioClip.GetContent(uwr);
+                audioSource.Stop();
+                audioSource.clip.UnloadAudioData();
             }
-            catch(Exception e)
+            AudioClip clip = null;
+            clip = DownloadHandlerAudioClip.GetContent(uwr);
+            if (!clip.LoadAudioData())
             {
-                Log.Error(e.ToString());
+                Log.Error("加载失败");
                 StartCoroutine(RequestMusicUrl());
                 yield break;
             }
             audioSource.clip = clip;
             audioSource.Play();
+        }
+    }
+
+    public void ChangeStyle()
+    {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+        if (GlobalData.uStyle == UStyle.White)
+        {
+            textName.DOColor(GlobalData.blackColor, 0.5f);
+            textSinger.DOColor(GlobalData.blackColor, 0.5f);
+        }
+        if (GlobalData.uStyle == UStyle.Black)
+        {
+            textName.DOColor(Color.white, 0.5f);
+            textSinger.DOColor(Color.white, 0.5f);
         }
     }
 

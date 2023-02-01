@@ -8,7 +8,7 @@ public class PanelHome : MonoBehaviour
     Vector3 RotationSpeed = Vector3.forward * -135f;
     public TextMeshProUGUI text;
 
-    private void Start()
+    private void Awake()
     {
         taichi = transform.Find("taichi");
         text = transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
@@ -21,11 +21,15 @@ public class PanelHome : MonoBehaviour
 
     public void ChangeStyle()
     {
-        if (Data.uStyle == UStyle.White)
+        if(!gameObject.activeInHierarchy)
         {
-            text.DOColor(Data.blackColor, 0.5f);
+            return;
         }
-        if (Data.uStyle == UStyle.Black)
+        if (GlobalData.uStyle == UStyle.White)
+        {
+            text.DOColor(GlobalData.blackColor, 0.5f);
+        }
+        if (GlobalData.uStyle == UStyle.Black)
         {
             text.DOColor(Color.white, 0.5f);
         }

@@ -14,15 +14,14 @@ public class Menu : MonoBehaviour
     public Image background;
 
     public PanelHome panelHome;
-    public GameObject panelPicture;
-    public UButton buttonRefresh;
-    public GameObject panelMusic;
+    public PanelPicture panelPicture;
+    public PanelMusic panelMusic;
     public GameObject panelVideo;
     public GameObject panelStory;
 
     // Start is called before the first frame update
     void Start()
-    { 
+    {
         Transform toggles = transform.Find("Toggles");
         toggleHome = toggles.Find("ToggleHome").GetComponent<UToggle>();
         togglePicture = toggles.Find("TogglePicture").GetComponent<UToggle>();
@@ -43,9 +42,8 @@ public class Menu : MonoBehaviour
         uSlider.onClick += OnClickSlider;
 
         panelHome = transform.parent.Find("PanelHome").GetComponent<PanelHome>();
-        panelPicture = transform.parent.Find("PanelPicture").gameObject;
-        buttonRefresh = panelPicture.transform.Find("ButtonRefresh").GetComponent<UButton>();
-        panelMusic = transform.parent.Find("PanelMusic").gameObject;
+        panelPicture = transform.parent.Find("PanelPicture").GetComponent<PanelPicture>();
+        panelMusic = transform.parent.Find("PanelMusic").GetComponent<PanelMusic>();
         panelVideo = transform.parent.Find("PanelVideo").gameObject;
         panelStory = transform.parent.Find("PanelStory").gameObject;
     }
@@ -57,15 +55,16 @@ public class Menu : MonoBehaviour
         toggleMusic.ChangeStyle();
         toggleVideo.ChangeStyle();
         toggleStory.ChangeStyle();
-        buttonRefresh.ChangeStyle();
 
         panelHome.ChangeStyle();
+        panelMusic.ChangeStyle();
+        panelPicture.ChangeStyle();
 
-        if (Data.uStyle == UStyle.Black)
+        if (GlobalData.uStyle == UStyle.Black)
         {
-            background.DOColor(Data.blackColor, 0.5f);
+            background.DOColor(GlobalData.blackColor, 0.5f);
         }
-        if (Data.uStyle == UStyle.White)
+        if (GlobalData.uStyle == UStyle.White)
         {
             background.DOColor(Color.white, 0.5f);
         }
@@ -76,8 +75,8 @@ public class Menu : MonoBehaviour
         if (value)
         {
             panelHome.gameObject.SetActive(false);
-            panelPicture.SetActive(false);
-            panelMusic.SetActive(false);
+            panelPicture.gameObject.SetActive(false);
+            panelMusic.gameObject.SetActive(false);
             panelVideo.SetActive(false);
             panelStory.SetActive(false);
             if (uToggle.name == toggleHome.name)
@@ -86,11 +85,11 @@ public class Menu : MonoBehaviour
             }
             if (uToggle.name == togglePicture.name)
             {
-                panelPicture.SetActive(true);
+                panelPicture.gameObject.SetActive(true);
             }
             if (uToggle.name == toggleMusic.name)
             {
-                panelMusic.SetActive(true);
+                panelMusic.gameObject.SetActive(true);
             }
             if (uToggle.name == toggleVideo.name)
             {

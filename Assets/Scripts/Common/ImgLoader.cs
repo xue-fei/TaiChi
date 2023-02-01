@@ -52,7 +52,7 @@ public class ImgLoader : MonoBehaviour
             yield break;
         } 
         bool ready = false;
-        string filePath = savePath + "/" + fileName + ".jpg";
+        string filePath = savePath + "/" + fileName;
         if (File.Exists(filePath))
         {
             url = "file:///" + filePath;

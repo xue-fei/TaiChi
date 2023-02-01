@@ -84,7 +84,7 @@ public class PanelVideo : MonoBehaviour
 
     private void PlayVideo()
     {
-        displayUGUI.DOColor(Data.blackColor, 0.3f);
+        displayUGUI.DOColor(GlobalData.blackColor, 0.3f);
         StartCoroutine(RequestVideoUrl());
     }
 
