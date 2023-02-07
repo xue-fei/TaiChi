@@ -16,9 +16,9 @@ public class PanelMusic : MonoBehaviour
     public TextMeshProUGUI textName;
     public TextMeshProUGUI textSinger;
     /// <summary>
-    /// https://api.wya6.cn/doc/NetEase_random.html
+    /// https://api.aa1.cn/doc/wyy_music.html
     /// </summary>
-    string apiUrl = "https://api.wya6.cn/api/NetEase_random?return=json";
+    string apiUrl = "https://api.wqwlkj.cn/wqwlapi/wyy_random.php?type=json";
     string musicPath;
     AudioSource audioSource;
     float pauseTime;
@@ -80,18 +80,18 @@ public class PanelMusic : MonoBehaviour
             {
                 Log.Warning(uwr.downloadHandler.text);
                 ApiData apiData = JsonConvert.DeserializeObject<ApiData>(uwr.downloadHandler.text);
-                if (apiData.code != 200)
+                if (apiData.code != 1)
                 {
                     Log.Error("apiData.code:" + apiData.code);
                     yield break;
                 }
                 textName.text = apiData.data.name;
-                textSinger.text = apiData.data.singer;
+                textSinger.text = "";
                 musicUrl = apiData.data.url;
-                string coverName = apiData.data.singer + "-" + apiData.data.name + ".jpg";
-                ImgLoader.Instance.DownLoad(image, apiData.data.cover, musicPath, coverName);
-                string musicFilePath = musicPath + "/" + apiData.data.singer + "-" + apiData.data.name + ".mp3";
-                string lyricPath = musicPath + "/" + apiData.data.singer + "-" + apiData.data.name + ".lrc";
+                string coverName = apiData.data.name + ".jpg";
+                ImgLoader.Instance.DownLoad(image, apiData.data.picurl, musicPath, coverName);
+                string musicFilePath = musicPath + "/" + apiData.data.name + ".mp3";
+
                 if (File.Exists(musicFilePath))
                 {
                     StartCoroutine(PlayMusic(musicFilePath));
@@ -100,13 +100,8 @@ public class PanelMusic : MonoBehaviour
                 {
                     Loom.RunAsync(async () =>
                     {
-                        File.WriteAllText(lyricPath, apiData.data.lyric);
                         using (var web = new WebClient())
                         {
-                            //web.DownloadProgressChanged += (s, e) =>
-                            //{
-                            //    Debug.LogWarning(e.ProgressPercentage + "%");
-                            //};
                             await web.DownloadFileTaskAsync(apiData.data.url, musicFilePath);
                             Loom.QueueOnMainThread(() =>
                             {
@@ -173,21 +168,19 @@ public class PanelMusic : MonoBehaviour
     public class ApiData
     {
         public int code;
-        public string msg;
-        public string desc;
-        public string content;
-        public string updateTime;
+        public string name;
+        public string coverImgUrl;
+        public string tags;
         public Data data = new Data();
     }
 
     public class Data
     {
-        public int id;
         public string name;
-        public string singer;
-        public string duration;
-        public string cover;
+        public string alname;
+        public int id;
         public string url;
-        public string lyric;
+        public string picurl;
+        public string artistsname;
     }
 }
