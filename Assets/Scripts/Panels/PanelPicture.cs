@@ -8,12 +8,14 @@ using UnityEngine.UI;
 
 public class PanelPicture : MonoBehaviour
 {
+    public Image background;
     public Image image;
     string beautyUrl = "https://v.api.aa1.cn/api/pc-girl_bz/index.php?wpon=ro38d57y8rhuwur3788y3rd";
     public UButton buttonRefresh;
 
     private void Awake()
     {
+        background = transform.Find("Background").GetComponent<Image>();
         image = transform.Find("Image").GetComponent<Image>();
         buttonRefresh = transform.Find("ButtonRefresh").GetComponent<UButton>();
     }
@@ -61,5 +63,13 @@ public class PanelPicture : MonoBehaviour
             return;
         }
         buttonRefresh.ChangeStyle();
+        if (GlobalData.uStyle == UStyle.White)
+        { 
+            background.DOColor(Color.white, 0.5f);
+        }
+        if (GlobalData.uStyle == UStyle.Black)
+        { 
+            background.DOColor(GlobalData.blackColor, 0.5f);
+        }
     }
 }
