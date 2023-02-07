@@ -11,6 +11,7 @@ using UnityEngine.UI;
 
 public class PanelMusic : MonoBehaviour
 {
+    public Image background;
     public Image image;
     public UButton buttonRefresh;
     public TextMeshProUGUI textName;
@@ -54,6 +55,7 @@ public class PanelMusic : MonoBehaviour
         {
             Directory.CreateDirectory(musicPath);
         }
+        background = transform.parent.Find("Background").GetComponent<Image>();
         image = transform.Find("Image").GetComponent<Image>();
         buttonRefresh = transform.Find("ButtonRefresh").GetComponent<UButton>();
         textName = transform.Find("TextName").GetComponent<TextMeshProUGUI>();
@@ -119,12 +121,14 @@ public class PanelMusic : MonoBehaviour
     private void OnEnable()
     {
         Log.Warning("OnEnable");
+        background.gameObject.SetActive(false);
         if (audioSource.clip != null)
         {
             audioSource.Play();
             audioSource.time = pauseTime;
-        }
-        camera3d.gameObject?.SetActive(true);
+        } 
+        camera3d.gameObject.SetActive(true);
+        ChangeStyle(0f);
     }
 
     private void OnDisable()
@@ -135,7 +139,8 @@ public class PanelMusic : MonoBehaviour
             audioSource.Pause();
             pauseTime = audioSource.time;
         }
-        camera3d.gameObject?.SetActive(false);
+        camera3d.gameObject.SetActive(false);
+        background.gameObject.SetActive(true);
     }
 
     private IEnumerator RequestMusicUrl()
@@ -221,7 +226,7 @@ public class PanelMusic : MonoBehaviour
         }
     }
 
-    public void ChangeStyle()
+    public void ChangeStyle(float time)
     {
         if (!gameObject.activeInHierarchy)
         {
@@ -229,17 +234,17 @@ public class PanelMusic : MonoBehaviour
         }
         if (GlobalData.uStyle == UStyle.White)
         {
-            textName.DOColor(GlobalData.blackColor, 0.5f);
-            textSinger.DOColor(GlobalData.blackColor, 0.5f);
-            camera3d.DOColor(Color.white, 0.5f);
+            textName.DOColor(GlobalData.blackColor, time);
+            textSinger.DOColor(GlobalData.blackColor, time);
+            camera3d.DOColor(Color.white, time);
         }
         if (GlobalData.uStyle == UStyle.Black)
         {
-            textName.DOColor(Color.white, 0.5f);
-            textSinger.DOColor(Color.white, 0.5f);
-            camera3d.DOColor(GlobalData.blackColor, 0.5f);
+            textName.DOColor(Color.white, time);
+            textSinger.DOColor(Color.white, time);
+            camera3d.DOColor(GlobalData.blackColor, time);
         }
-        buttonRefresh.ChangeStyle();
+        buttonRefresh.ChangeStyle(time);
     }
 
     public class SongData

@@ -10,7 +10,6 @@ using UnityEngine.UI;
 
 public class PanelVideo : MonoBehaviour
 {
-    public Image background;
     public MediaPlayer mediaPlayer;
     public DisplayUGUI displayUGUI;
     public TMP_Dropdown dropdown;
@@ -40,7 +39,6 @@ public class PanelVideo : MonoBehaviour
 
     private void Awake()
     {
-        background = transform.Find("Background").GetComponent<Image>();
         mediaPlayer = transform.Find("AVPro Media Player").GetComponent<MediaPlayer>();
         mediaPlayer.Events.AddListener(OnVideoEvent);
         displayUGUI = transform.Find("AV Pro Video uGUI").GetComponent<DisplayUGUI>();
@@ -198,19 +196,11 @@ public class PanelVideo : MonoBehaviour
         public string info;
     }
 
-    public void ChangeStyle()
+    public void ChangeStyle(float time)
     {
         if (!gameObject.activeInHierarchy)
         {
             return;
-        }
-        if (GlobalData.uStyle == UStyle.White)
-        { 
-            background.DOColor(Color.white, 0.5f);
-        }
-        if (GlobalData.uStyle == UStyle.Black)
-        { 
-            background.DOColor(GlobalData.blackColor, 0.5f);
         }
     }
 }

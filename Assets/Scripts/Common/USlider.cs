@@ -18,25 +18,25 @@ public class USlider : Slider, IChangeStyle
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        ChangeStyle();
+        ChangeStyle(GlobalData.time);
         onClick?.Invoke();
     }
 
-    public void ChangeStyle()
+    public void ChangeStyle(float time)
     {
         if (GlobalData.uStyle == UStyle.White)
         {
-            this.DOValue(1f, 0.5f);
+            this.DOValue(1f, time);
             text.text = "黑暗";
-            text.DOColor(Color.white, 0.5f);
+            text.DOColor(Color.white, time);
             GlobalData.uStyle = UStyle.Black;
             return;
         }
         else
         {
-            this.DOValue(0f, 0.5f);
+            this.DOValue(0f, time);
             text.text = "光明";
-            text.DOColor(Color.black, 0.5f);
+            text.DOColor(Color.black, time);
             GlobalData.uStyle = UStyle.White;
         }
     }

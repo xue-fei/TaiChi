@@ -13,15 +13,15 @@ public class UButton : Button, IChangeStyle
         svgImage.color = Color.white;
     }
 
-    public void ChangeStyle()
+    public void ChangeStyle(float time)
     {
         if (GlobalData.uStyle == UStyle.White)
         {
-            svgImage.DOColor(GlobalData.blackColor, 0.5f);
+            svgImage.DOColor(GlobalData.blackColor, time);
         }
         if (GlobalData.uStyle == UStyle.Black)
         {
-            svgImage.DOColor(Color.white, 0.5f);
+            svgImage.DOColor(Color.white, time);
         }
     }
 }

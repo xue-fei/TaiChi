@@ -39,28 +39,28 @@ public class UToggle : Toggle, IChangeStyle
         }
         else
         {
-            ChangeColor();
+            ChangeColor(GlobalData.time);
             svgImage.gameObject.SetActive(false);
         }
     }
 
-    private void ChangeColor()
+    private void ChangeColor(float time)
     {
         if (GlobalData.uStyle == UStyle.White)
         {
-            background.DOColor(GlobalData.blackColor, 0.5f);
-            checkmark.DOColor(GlobalData.blackColor, 0.5f);
-            text.DOColor(GlobalData.blackColor, 0.5f);
+            background.DOColor(GlobalData.blackColor, time);
+            checkmark.DOColor(GlobalData.blackColor, time);
+            text.DOColor(GlobalData.blackColor, time);
         }
         if (GlobalData.uStyle == UStyle.Black)
         {
-            background.DOColor(Color.white, 0.5f);
-            checkmark.DOColor(Color.white, 0.5f);
-            text.DOColor(Color.white, 0.5f);
+            background.DOColor(Color.white, time);
+            checkmark.DOColor(Color.white, time);
+            text.DOColor(Color.white, time);
         }
     }
 
-    public void ChangeStyle()
+    public void ChangeStyle(float time)
     {
         if (isOn)
         {
@@ -68,7 +68,7 @@ public class UToggle : Toggle, IChangeStyle
         }
         else
         {
-            ChangeColor();
+            ChangeColor(time);
         }
     }
 }

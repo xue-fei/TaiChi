@@ -1,5 +1,5 @@
 
 interface IChangeStyle 
 {
-    void ChangeStyle();
+    void ChangeStyle(float time);
 }

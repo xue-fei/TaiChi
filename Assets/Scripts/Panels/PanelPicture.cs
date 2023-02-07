@@ -8,14 +8,12 @@ using UnityEngine.UI;
 
 public class PanelPicture : MonoBehaviour
 {
-    public Image background;
     public Image image;
     string beautyUrl = "https://v.api.aa1.cn/api/pc-girl_bz/index.php?wpon=ro38d57y8rhuwur3788y3rd";
     public UButton buttonRefresh;
 
-    private void Awake()
+    public void Awake()
     {
-        background = transform.Find("Background").GetComponent<Image>();
         image = transform.Find("Image").GetComponent<Image>();
         buttonRefresh = transform.Find("ButtonRefresh").GetComponent<UButton>();
     }
@@ -25,6 +23,11 @@ public class PanelPicture : MonoBehaviour
     {
         buttonRefresh.onClick.AddListener(() => StartCoroutine(RequestBeauty()));
         StartCoroutine(RequestBeauty());
+    }
+
+    private void OnEnable()
+    {
+        ChangeStyle(0f);
     }
 
     private IEnumerator RequestBeauty()
@@ -56,20 +59,12 @@ public class PanelPicture : MonoBehaviour
         }
     }
 
-    public void ChangeStyle()
+    public void ChangeStyle(float time)
     {
         if (!gameObject.activeInHierarchy)
         {
             return;
         }
-        buttonRefresh.ChangeStyle();
-        if (GlobalData.uStyle == UStyle.White)
-        { 
-            background.DOColor(Color.white, 0.5f);
-        }
-        if (GlobalData.uStyle == UStyle.Black)
-        { 
-            background.DOColor(GlobalData.blackColor, 0.5f);
-        }
+        buttonRefresh.ChangeStyle(time);
     }
 }

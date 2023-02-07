@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using DG.Tweening;
+using HtmlAgilityPack;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -18,11 +19,20 @@ public class PanelStory : MonoBehaviour
     private List<StoryInfo> storyInfos;
     public Button buttonLast;
     public Button buttonNext;
-    public TextMeshProUGUI textPage;
+    public TextMeshProUGUI textPage; 
     /// <summary>
     /// 当前页
     /// </summary>
     private int nowPage = 1;
+
+    private void Awake()
+    { 
+        scrollView = transform.Find("Scroll View").GetComponent<StoryScrollView>();
+        dropdown = transform.Find("Dropdown").GetComponent<TMP_Dropdown>();
+        buttonLast = transform.Find("ButtonLast").GetComponent<Button>();
+        buttonNext = transform.Find("ButtonNext").GetComponent<Button>();
+        textPage = transform.Find("Page/Text (TMP)").GetComponent<TextMeshProUGUI>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -33,14 +43,9 @@ public class PanelStory : MonoBehaviour
             Directory.CreateDirectory(storyPath);
         }
         storyInfos = new List<StoryInfo>();
-        storyItems = new List<GameObject>();
-        scrollView = transform.Find("Scroll View").GetComponent<StoryScrollView>();
-        dropdown = transform.Find("Dropdown").GetComponent<TMP_Dropdown>();
+        storyItems = new List<GameObject>(); 
         dropdown.onValueChanged.AddListener(OnSelect);
-        storyType = StoryType.dushi;
-        buttonLast = transform.Find("ButtonLast").GetComponent<Button>();
-        buttonNext = transform.Find("ButtonNext").GetComponent<Button>();
-        textPage = transform.Find("Page/Text (TMP)").GetComponent<TextMeshProUGUI>();
+        storyType = StoryType.dushi; 
         buttonLast.onClick.AddListener(PageLast);
         buttonNext.onClick.AddListener(PageNext);
         Loom.RunAsync(() =>
@@ -231,6 +236,14 @@ public class PanelStory : MonoBehaviour
             }
         }
         return html;
+    }
+
+    public void ChangeStyle(float time)
+    {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }  
     }
 }
 

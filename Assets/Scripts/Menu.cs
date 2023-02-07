@@ -1,7 +1,10 @@
-﻿using UnityEngine; 
+﻿using DG.Tweening;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
+    public Image background;
     public UToggle toggleHome;
     public UToggle togglePicture;
     public UToggle toggleMusic;
@@ -9,16 +12,17 @@ public class Menu : MonoBehaviour
     public UToggle toggleStory;
 
     public USlider uSlider;
-     
+
     public PanelHome panelHome;
     public PanelPicture panelPicture;
     public PanelMusic panelMusic;
     public PanelVideo panelVideo;
-    public GameObject panelStory;
+    public PanelStory panelStory;
 
     // Start is called before the first frame update
     void Start()
     {
+        background = transform.parent.Find("Background").GetComponent<Image>();
         Transform toggles = transform.Find("Toggles");
         toggleHome = toggles.Find("ToggleHome").GetComponent<UToggle>();
         togglePicture = toggles.Find("TogglePicture").GetComponent<UToggle>();
@@ -32,7 +36,7 @@ public class Menu : MonoBehaviour
         toggleMusic.onValueChanged.AddListener((value) => OnToggle(value, toggleMusic));
         toggleVideo.onValueChanged.AddListener((value) => OnToggle(value, toggleVideo));
         toggleStory.onValueChanged.AddListener((value) => OnToggle(value, toggleStory));
-         
+
         uSlider = transform.Find("Slider").GetComponent<USlider>();
         uSlider.value = 1f;
         uSlider.onClick += OnClickSlider;
@@ -40,22 +44,32 @@ public class Menu : MonoBehaviour
         panelHome = transform.parent.Find("PanelHome").GetComponent<PanelHome>();
         panelPicture = transform.parent.Find("PanelPicture").GetComponent<PanelPicture>();
         panelMusic = transform.parent.Find("PanelMusic").GetComponent<PanelMusic>();
-        panelVideo = transform.parent.Find("PanelVideo").GetComponent< PanelVideo>();
-        panelStory = transform.parent.Find("PanelStory").gameObject;
+        panelVideo = transform.parent.Find("PanelVideo").GetComponent<PanelVideo>();
+        panelStory = transform.parent.Find("PanelStory").GetComponent<PanelStory>();
     }
 
     void OnClickSlider()
     {
-        toggleHome.ChangeStyle();
-        togglePicture.ChangeStyle();
-        toggleMusic.ChangeStyle();
-        toggleVideo.ChangeStyle();
-        toggleStory.ChangeStyle();
+        toggleHome.ChangeStyle(GlobalData.time);
+        togglePicture.ChangeStyle(GlobalData.time);
+        toggleMusic.ChangeStyle(GlobalData.time);
+        toggleVideo.ChangeStyle(GlobalData.time);
+        toggleStory.ChangeStyle(GlobalData.time);
 
-        panelHome.ChangeStyle();
-        panelMusic.ChangeStyle();
-        panelPicture.ChangeStyle();
-        panelVideo.ChangeStyle();
+        panelHome.ChangeStyle(GlobalData.time);
+        panelMusic.ChangeStyle(GlobalData.time);
+        panelPicture.ChangeStyle(GlobalData.time);
+        panelVideo.ChangeStyle(GlobalData.time);
+        panelStory.ChangeStyle(GlobalData.time);
+
+        if (GlobalData.uStyle == UStyle.Black)
+        {
+            background.DOColor(GlobalData.blackColor, GlobalData.time);
+        }
+        if (GlobalData.uStyle == UStyle.White)
+        {
+            background.DOColor(Color.white, GlobalData.time);
+        }
     }
 
     void OnToggle(bool value, UToggle uToggle)
@@ -66,7 +80,7 @@ public class Menu : MonoBehaviour
             panelPicture.gameObject.SetActive(false);
             panelMusic.gameObject.SetActive(false);
             panelVideo.gameObject.SetActive(false);
-            panelStory.SetActive(false);
+            panelStory.gameObject.SetActive(false);
             if (uToggle.name == toggleHome.name)
             {
                 panelHome.gameObject.SetActive(true);
@@ -85,7 +99,7 @@ public class Menu : MonoBehaviour
             }
             if (uToggle.name == toggleStory.name)
             {
-                panelStory.SetActive(true);
+                panelStory.gameObject.SetActive(true);
             }
         }
     }
