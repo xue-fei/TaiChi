@@ -149,7 +149,15 @@ public class PanelMusic : MonoBehaviour
                     || (null != currentItem && item.mIndex >= currentItem.mIndex - showLyricSize
                     && item.mIndex <= currentItem.mIndex + showLyricSize))
                 {
-                    text += item.mText + System.Environment.NewLine;
+                    if (GlobalData.uStyle == UStyle.Black)
+                    {
+                        text += Lyric.WrapStringWithColorTag(item.mText, 255, 255, 255) + System.Environment.NewLine;
+                    }
+                    else
+                    {
+                        text += Lyric.WrapStringWithColorTag(item.mText, (int)(GlobalData.blackColor.r * 255)
+                            , (int)(GlobalData.blackColor.g * 255), (int)(GlobalData.blackColor.b * 255)) + System.Environment.NewLine;
+                    }
                 }
             }
             textLyric.text = text;

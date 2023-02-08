@@ -40,11 +40,12 @@ public class LyricItem : IComparable<LyricItem>
     }
 }
 
-public class Lyric  {
+public class Lyric
+{
     // https://en.wikipedia.org/wiki/LRC_(file_format);
-    
+
     // those ID Tags are opitional
-    
+
     // [ti : value]
     // Lyrics (song) title
     public string mTitle = "";
