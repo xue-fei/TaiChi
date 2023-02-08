@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using TMPro;
@@ -20,7 +21,8 @@ public class PanelMusic : MonoBehaviour
     /// https://api.aa1.cn/doc/wyy_music.html
     /// </summary>
     string apiUrl = "https://api.wqwlkj.cn/wqwlapi/wyy_random.php?type=json";
-    string lyricUrl = "https://music.163.com/api/song/lyric?id={歌曲ID}&lv=1&kv=1&tv=-1";
+    string infoUrl = "http://music.163.com/api/song/detail/?id={0}&ids=%5B{1}%5D";
+    string lyricUrl = "https://music.163.com/api/song/lyric?id={0}&lv=1&kv=1&tv=-1";
     string musicPath;
     AudioSource audioSource;
     float pauseTime;
@@ -47,6 +49,9 @@ public class PanelMusic : MonoBehaviour
     /// 中间位置，用以对比cube位置与此帧的频谱数据
     /// </summary>
     Vector3 cubePos;
+
+    public Text textLyric;
+    Lyric mLyric = new Lyric();
 
     private void Awake()
     {
@@ -78,6 +83,7 @@ public class PanelMusic : MonoBehaviour
             cubeTransform[i].parent = linerenderer.transform;
             tempCube.name = i.ToString();
         }
+        textLyric = transform.Find("TextLyric").GetComponent<Text>();
     }
 
     // Start is called before the first frame update
@@ -116,8 +122,45 @@ public class PanelMusic : MonoBehaviour
                 cubeTransform[i].position -= new Vector3(0, 0.5f, 0);
             }
         }
+        UpdateLyric();
     }
-     
+
+    void UpdateLyric()
+    {
+        // test code
+        // get current music play timestamp
+        Int64 timestamp = GetCurrentTimestamp();
+        // search current lyric
+        LyricItem currentItem = mLyric.SearchCurrentItem(timestamp);
+        string text = "";
+        if (null != textLyric)
+        {
+            // show lyrics from index (currentItem.mIndex - showLyricSize) to (currentItem.mIndex + showLyricSize)
+            List<LyricItem> items = mLyric.GetItems();
+            int showLyricSize = 3;
+            foreach (LyricItem item in items)
+            {
+                if (item == currentItem)
+                {
+                    // if current lyric, highlight text with color (R, G, B)
+                    text += Lyric.WrapStringWithColorTag(item.mText, 255, 0, 0) + System.Environment.NewLine;
+                }
+                else if ((null == currentItem && item.mIndex < showLyricSize)
+                    || (null != currentItem && item.mIndex >= currentItem.mIndex - showLyricSize
+                    && item.mIndex <= currentItem.mIndex + showLyricSize))
+                {
+                    text += item.mText + System.Environment.NewLine;
+                }
+            }
+            textLyric.text = text;
+        }
+    }
+
+    Int64 GetCurrentTimestamp()
+    {
+        return (Int64)(audioSource.time * 1000.0f);
+    }
+
     private void OnEnable()
     {
         Log.Warning("OnEnable");
@@ -126,7 +169,7 @@ public class PanelMusic : MonoBehaviour
         {
             audioSource.Play();
             audioSource.time = pauseTime;
-        } 
+        }
         camera3d.gameObject.SetActive(true);
         ChangeStyle(0f);
     }
@@ -145,31 +188,62 @@ public class PanelMusic : MonoBehaviour
 
     private IEnumerator RequestMusicUrl()
     {
-        UnityWebRequest uwr = UnityWebRequest.Get(apiUrl);
-        yield return uwr.SendWebRequest();
-        if (uwr.result != UnityWebRequest.Result.Success)
+        SongData songData;
+        UnityWebRequest uwr0 = UnityWebRequest.Get(apiUrl);
+        uwr0.certificateHandler = new WebReqSkipCert();
+        yield return uwr0.SendWebRequest();
+        if (uwr0.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError("请求失败");
+            Debug.LogError("请求失败 " + uwr0.error);
             yield break;
         }
         else
         {
-            string musicUrl = "";
             try
             {
-                Log.Warning(uwr.downloadHandler.text);
-                SongData apiData = JsonConvert.DeserializeObject<SongData>(uwr.downloadHandler.text);
-                if (apiData.code != 1)
+                Log.Warning(uwr0.downloadHandler.text);
+                songData = JsonConvert.DeserializeObject<SongData>(uwr0.downloadHandler.text);
+                if (songData.code != 1)
                 {
-                    Log.Error("apiData.code:" + apiData.code);
+                    Log.Error("apiData.code:" + songData.code);
                     yield break;
                 }
-                textName.text = apiData.data.name;
+                textName.text = songData.data.name;
                 textSinger.text = "";
-                musicUrl = apiData.data.url;
-                string coverName = apiData.data.name + ".jpg";
-                ImgLoader.Instance.DownLoad(image, apiData.data.picurl, musicPath, coverName);
-                string musicFilePath = musicPath + "/" + apiData.data.name + ".mp3";
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                yield break;
+            }
+        }
+        string singer;
+        SongInfo songInfo = null;
+        UnityWebRequest uwr1 = UnityWebRequest.Get(string.Format(infoUrl, songData.data.id, songData.data.id));
+        uwr1.certificateHandler = new WebReqSkipCert();
+        yield return uwr1.SendWebRequest();
+        if (uwr1.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("请求失败 " + uwr1.error);
+            yield break;
+        }
+        else
+        {
+            try
+            {
+                Log.Warning(uwr1.downloadHandler.text);
+                songInfo = JsonConvert.DeserializeObject<SongInfo>(uwr1.downloadHandler.text);
+                if (songInfo.code != 200)
+                {
+                    Log.Error("songInfo.code:" + songInfo.code);
+                    yield break;
+                }
+                singer = songInfo.songs[0].artists[0].name;
+                textSinger.text = singer;
+                string musicUrl = songData.data.url;
+                string coverName = singer + "-" + songData.data.name + ".jpg";
+                ImgLoader.Instance.DownLoad(image, songData.data.picurl, musicPath, coverName);
+                string musicFilePath = musicPath + "/" + singer + "-" + songData.data.name + ".mp3";
 
                 if (File.Exists(musicFilePath))
                 {
@@ -181,7 +255,7 @@ public class PanelMusic : MonoBehaviour
                     {
                         using (var web = new WebClient())
                         {
-                            await web.DownloadFileTaskAsync(apiData.data.url, musicFilePath);
+                            await web.DownloadFileTaskAsync(songData.data.url, musicFilePath);
                             Loom.QueueOnMainThread(() =>
                             {
                                 StartCoroutine(PlayMusic(musicFilePath));
@@ -189,6 +263,37 @@ public class PanelMusic : MonoBehaviour
                         }
                     });
                 }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                yield break;
+            }
+        }
+
+        LyricData lyricData;
+        UnityWebRequest uwr2 = UnityWebRequest.Get(string.Format(lyricUrl, songData.data.id));
+        //uwr2.certificateHandler = new WebReqSkipCert();
+        yield return uwr2.SendWebRequest();
+        if (uwr2.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("请求失败 " + uwr2.error);
+            yield break;
+        }
+        else
+        {
+            try
+            {
+                Log.Warning(uwr2.downloadHandler.text);
+                lyricData = JsonConvert.DeserializeObject<LyricData>(uwr2.downloadHandler.text);
+                if (lyricData.code != 200)
+                {
+                    Log.Error("lyricData.code:" + lyricData.code);
+                    yield break;
+                }
+                string lrcFilePath = musicPath + "/" + singer + "-" + songData.data.name + ".lrc";
+                File.WriteAllText(lrcFilePath, lyricData.lrc.lyric);
+                mLyric.Load(lrcFilePath);
             }
             catch (Exception e)
             {
@@ -264,5 +369,36 @@ public class PanelMusic : MonoBehaviour
         public string url;
         public string picurl;
         public string artistsname;
+    }
+
+    public class SongInfo
+    {
+        public int code;
+        public List<Song> songs = new List<Song>();
+    }
+
+    public class Song
+    {
+        public string name;
+        public int id;
+        public List<Artist> artists = new List<Artist>();
+    }
+
+    public class Artist
+    {
+        public string name;
+        public int id;
+    }
+
+    public class LyricData
+    {
+        public int code;
+        public Lrc lrc = new Lrc();
+    }
+
+    public class Lrc
+    {
+        public int version;
+        public string lyric;
     }
 }
