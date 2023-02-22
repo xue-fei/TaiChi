@@ -80,10 +80,12 @@ public class ImgLoader : MonoBehaviour
                 }
                 if (image != null)
                 {
+                    Resources.UnloadAsset(image.material.mainTexture);
                     image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                 }
             }
         }
+        Resources.UnloadUnusedAssets();
     }
 
     public void DownLoad(Image image, string url)

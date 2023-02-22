@@ -125,6 +125,7 @@ public class PanelMusic : MonoBehaviour
         UpdateLyric();
     }
 
+    string text;
     void UpdateLyric()
     {
         // test code
@@ -132,7 +133,7 @@ public class PanelMusic : MonoBehaviour
         Int64 timestamp = GetCurrentTimestamp();
         // search current lyric
         LyricItem currentItem = mLyric.SearchCurrentItem(timestamp);
-        string text = "";
+        text = "";
         if (null != textLyric)
         {
             // show lyrics from index (currentItem.mIndex - showLyricSize) to (currentItem.mIndex + showLyricSize)
@@ -196,6 +197,7 @@ public class PanelMusic : MonoBehaviour
 
     private IEnumerator RequestMusicUrl()
     {
+        pauseTime = 0;
         SongData songData;
         UnityWebRequest uwr0 = UnityWebRequest.Get(apiUrl);
         uwr0.certificateHandler = new WebReqSkipCert();
