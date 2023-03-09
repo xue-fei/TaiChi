@@ -3,6 +3,7 @@ using RenderHeads.Media.AVProVideo;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -15,7 +16,7 @@ public class PanelVideo : MonoBehaviour
     public TMP_Dropdown dropdown;
     string nowUrl = "";
     VideoType videoType = VideoType.Girl1;
-
+    string videoPath;
     /// <summary>
     /// 小姐姐短视频
     /// </summary>
@@ -39,6 +40,11 @@ public class PanelVideo : MonoBehaviour
 
     private void Awake()
     {
+        videoPath = Application.persistentDataPath + "/Video";
+        if (!Directory.Exists(videoPath))
+        {
+            Directory.CreateDirectory(videoPath);
+        }
         mediaPlayer = transform.Find("AVPro Media Player").GetComponent<MediaPlayer>();
         mediaPlayer.Events.AddListener(OnVideoEvent);
         displayUGUI = transform.Find("AV Pro Video uGUI").GetComponent<DisplayUGUI>();
