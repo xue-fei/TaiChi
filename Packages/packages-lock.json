@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.github.aliessmael.unitylogsviewer": {
+      "version": "https://gitee.com/awnuxcvbn/UnityLogsViewer.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "683019f427fb9c0d11721ea457078a1ec1f801ad"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 1,
@@ -14,7 +21,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.17",
+      "version": "2.0.22",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -42,18 +49,6 @@
       },
       "url": "https://packages.unity.cn"
     },
-    "com.unity.timeline": {
-      "version": "1.6.4",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.modules.director": "1.0.0",
-        "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.audio": "1.0.0",
-        "com.unity.modules.particlesystem": "1.0.0"
-      },
-      "url": "https://packages.unity.cn"
-    },
     "com.unity.ugui": {
       "version": "1.0.0",
       "depth": 0,
@@ -64,7 +59,7 @@
       }
     },
     "com.unity.vectorgraphics": {
-      "version": "2.0.0-preview.20",
+      "version": "2.0.0-preview.21",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -79,16 +74,6 @@
         "com.unity.modules.unitywebrequest": "1.0.0",
         "com.unity.modules.unitywebrequesttexture": "1.0.0",
         "com.unity.modules.unitywebrequestwww": "1.0.0"
-      },
-      "url": "https://packages.unity.cn"
-    },
-    "com.unity.visualscripting": {
-      "version": "1.7.8",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.ugui": "1.0.0",
-        "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.cn"
     },
