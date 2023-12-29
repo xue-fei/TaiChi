@@ -20,7 +20,7 @@ public class PanelMusic : MonoBehaviour
     /// <summary>
     /// https://api.aa1.cn/doc/wyy_music.html
     /// </summary>
-    string apiUrl = "https://api.wqwlkj.cn/wqwlapi/wyy_random.php?type=json";
+    string apiUrl = "https://free.wqwlkj.cn/wqwlapi/wyy_random.php?type=json";
     string infoUrl = "http://music.163.com/api/song/detail/?id={0}&ids=%5B{1}%5D";
     string lyricUrl = "https://music.163.com/api/song/lyric?id={0}&lv=1&kv=1&tv=-1";
     string musicPath;
