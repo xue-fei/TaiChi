@@ -48,7 +48,19 @@ public class PanelStory : MonoBehaviour
         storyType = StoryType.dushi; 
         buttonLast.onClick.AddListener(PageLast);
         buttonNext.onClick.AddListener(PageNext);
+    }
+
+    private void OnEnable()
+    {
         Loom.RunAsync(() =>
+        {
+            RequestStory();
+        });
+    }
+
+    private void OnDisable()
+    {
+        Loom.StopAsync(() =>
         {
             RequestStory();
         });

@@ -94,6 +94,15 @@ public class Loom : MonoBehaviour
         return null;
     }
 
+    public static Thread StopAsync(Action a)
+    {
+        if(_currentActions.Contains(a))
+        {
+            _currentActions.Remove(a);
+        }
+        return null;
+    }
+
     private static void RunAction(object action)
     {
         try
@@ -118,7 +127,7 @@ public class Loom : MonoBehaviour
         }
     }
 
-    List<Action> _currentActions = new List<Action>();
+    static List<Action> _currentActions = new List<Action>();
 
     // Update is called once per frame  
     void Update()

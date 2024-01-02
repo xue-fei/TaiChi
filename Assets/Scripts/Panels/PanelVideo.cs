@@ -103,6 +103,7 @@ public class PanelVideo : MonoBehaviour
             yield break;
         }
         UnityWebRequest uwr = UnityWebRequest.Get(nowUrl);
+        uwr.certificateHandler = new WebReqSkipCert();
         yield return uwr.SendWebRequest();
         if (uwr.result != UnityWebRequest.Result.Success)
         {

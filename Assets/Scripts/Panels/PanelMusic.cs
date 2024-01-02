@@ -55,7 +55,7 @@ public class PanelMusic : MonoBehaviour
 
     private void Awake()
     {
-        musicPath = Application.persistentDataPath + "/Music";
+        musicPath = @Application.persistentDataPath + "/Music";
         if (!Directory.Exists(musicPath))
         {
             Directory.CreateDirectory(musicPath);
@@ -283,7 +283,7 @@ public class PanelMusic : MonoBehaviour
 
         LyricData lyricData;
         UnityWebRequest uwr2 = UnityWebRequest.Get(string.Format(lyricUrl, songData.data.id));
-        //uwr2.certificateHandler = new WebReqSkipCert();
+        uwr2.certificateHandler = new WebReqSkipCert();
         yield return uwr2.SendWebRequest();
         if (uwr2.result != UnityWebRequest.Result.Success)
         {
@@ -317,6 +317,7 @@ public class PanelMusic : MonoBehaviour
     {
         using (var uwr = UnityWebRequestMultimedia.GetAudioClip(musicPath, AudioType.MPEG))
         {
+            uwr.certificateHandler = new WebReqSkipCert();
             yield return uwr.SendWebRequest();
             if (uwr.result != UnityWebRequest.Result.Success)
             {
