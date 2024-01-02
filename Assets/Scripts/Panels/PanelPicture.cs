@@ -11,9 +11,15 @@ public class PanelPicture : MonoBehaviour
     public Image image;
     string beautyUrl = "https://v.api.aa1.cn/api/pc-girl_bz/index.php?wpon=ro38d57y8rhuwur3788y3rd";
     public UButton buttonRefresh;
+    string picturePath;
 
     public void Awake()
     {
+        picturePath = @Application.persistentDataPath + "/Picture";
+        if (!Directory.Exists(picturePath))
+        {
+            Directory.CreateDirectory(picturePath);
+        }
         image = transform.Find("Image").GetComponent<Image>();
         buttonRefresh = transform.Find("ButtonRefresh").GetComponent<UButton>();
     }
@@ -48,7 +54,7 @@ public class PanelPicture : MonoBehaviour
             {
                 image.DOColor(Color.black, 0.2f);
                 Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
-                string filePath = Application.persistentDataPath + "/Picture/"
+                string filePath = picturePath + "/"
                     + DateTime.Now.ToFileTime() + ".jpg";
                 File.WriteAllBytesAsync(filePath, uwr.downloadHandler.data);
                 if (image != null)
