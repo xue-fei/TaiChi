@@ -34,6 +34,7 @@ public class PanelPicture : MonoBehaviour
     {
         using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(beautyUrl))
         {
+            uwr.certificateHandler = new WebReqSkipCert();
             yield return uwr.SendWebRequest();
 
             if (uwr.result != UnityWebRequest.Result.Success)
@@ -47,7 +48,7 @@ public class PanelPicture : MonoBehaviour
             {
                 image.DOColor(Color.black, 0.2f);
                 Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
-                string filePath = Application.streamingAssetsPath + "/Picture/"
+                string filePath = Application.persistentDataPath + "/Picture/"
                     + DateTime.Now.ToFileTime() + ".jpg";
                 File.WriteAllBytesAsync(filePath, uwr.downloadHandler.data);
                 if (image != null)
