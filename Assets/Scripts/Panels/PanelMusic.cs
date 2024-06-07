@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -123,6 +124,10 @@ public class PanelMusic : MonoBehaviour
             }
         }
         UpdateLyric();
+        if (audioSource.time > audioSource.clip.length - 0.05f)
+        {
+            StartCoroutine(RequestMusicUrl());
+        }
     }
 
     string text;
@@ -195,6 +200,7 @@ public class PanelMusic : MonoBehaviour
         background.gameObject.SetActive(true);
     }
 
+    string invalidChars = @"[\\/:*?""<>|]";
     private IEnumerator RequestMusicUrl()
     {
         pauseTime = 0;
@@ -213,6 +219,7 @@ public class PanelMusic : MonoBehaviour
             {
                 Log.Warning(uwr0.downloadHandler.text);
                 songData = JsonConvert.DeserializeObject<SongData>(uwr0.downloadHandler.text);
+                songData.name = Regex.Replace(songData.name, invalidChars, "");
                 if (songData.code != 1)
                 {
                     Log.Error("apiData.code:" + songData.code);
