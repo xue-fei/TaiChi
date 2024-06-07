@@ -21,7 +21,8 @@ public class PanelHome : MonoBehaviour
 
     private void Update()
     {
-        taichi.transform.Rotate(RotationSpeed * Time.deltaTime, Space.Self);
+        //taichi.transform.Rotate(RotationSpeed * Time.deltaTime, Space.Self);
+        taichi.transform.rotation *= Quaternion.Euler(0, 0, -135f * Time.deltaTime);
     }
 
     public void ChangeStyle(float time)
