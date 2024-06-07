@@ -376,7 +376,7 @@ public class PanelMusic : MonoBehaviour
     {
         public string name;
         public string alname;
-        public int id;
+        public long id;
         public string url;
         public string picurl;
         public string artistsname;
@@ -391,7 +391,7 @@ public class PanelMusic : MonoBehaviour
     public class Song
     {
         public string name;
-        public int id;
+        public long id;
         public List<Artist> artists = new List<Artist>();
     }
 
