@@ -346,6 +346,7 @@ public class PanelMusic : MonoBehaviour
             }
             audioSource.clip = clip;
             audioSource.Play();
+            image.transform.localRotation = Quaternion.identity;
         }
     }
 

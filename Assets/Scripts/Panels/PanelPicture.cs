@@ -45,7 +45,7 @@ public class PanelPicture : MonoBehaviour
 
             if (uwr.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError(uwr.error);
+                Debug.LogError(beautyUrl + " " + uwr.error);
                 uwr.Dispose();
                 StartCoroutine(RequestBeauty());
                 yield break;
