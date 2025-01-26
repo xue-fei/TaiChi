@@ -67,7 +67,7 @@ public class StoryItem : FancyScrollRectCell<StoryInfo, StoryContext>
         bool ready = false;
         if (File.Exists(filePath))
         {
-            storyInfo.ImgUrl = "file:///" + filePath;
+            storyInfo.ImgUrl = "file://" + filePath;
             ready = true;
         }
 

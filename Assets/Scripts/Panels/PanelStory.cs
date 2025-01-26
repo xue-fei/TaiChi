@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 public class PanelStory : MonoBehaviour
 {
-    private string host = "https://txt80.com/";
+    private string host = "https://txt80.cc/";
     private StoryType storyType = StoryType.dushi;
     public TMP_Dropdown dropdown;
     public StoryScrollView scrollView;
