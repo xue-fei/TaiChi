@@ -7,7 +7,7 @@
 #### 说明
 
 1.  创意源自 https://github.com/cuifengcn/TAICHI-flet
-2.  当前Unity版本 Unity 2021.3.12f1c2
+2.  当前Unity版本 Unity 2021.3.21f1c1
 3.  图片视频API来自 https://api.aa1.cn/
 4.  图标来自 https://iconpark.oceanengine.com/official
 5.  功能未完成
