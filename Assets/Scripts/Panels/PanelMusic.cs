@@ -322,18 +322,19 @@ public class PanelMusic : MonoBehaviour
 
     IEnumerator PlayMusic(string musicPath)
     {
-        using (var uwr = UnityWebRequestMultimedia.GetAudioClip(musicPath, AudioType.MPEG))
+        using (var uwr = UnityWebRequestMultimedia.GetAudioClip("file://"+musicPath, AudioType.MPEG))
         {
             uwr.certificateHandler = new WebReqSkipCert();
             yield return uwr.SendWebRequest();
             if (uwr.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError(uwr.error);
+                Debug.LogError(musicPath+" "+uwr.error);
                 yield break;
             }
             if (audioSource.clip != null)
             {
                 audioSource.Stop();
+                audioSource.time = 0f;
                 audioSource.clip.UnloadAudioData();
             }
             AudioClip clip = null;
